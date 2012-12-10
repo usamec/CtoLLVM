@@ -124,11 +124,14 @@ expression returns [PNode node]
   | ^(UNARYMINUS a=expression)
   | ^(UNARYDEREFERENCE a=expression) {node = new DereferenceNode($a.node);}
   | ^(UNARYADDRESS a=expression) {node = new AddressNode($a.node);}
+  | ^(ARRAYSUBS a=expression b=expression)
+        {node = new DereferenceNode(new AddNode($a.node, $b.node));}
   | f=function_call {node = $f.node;}
   | i=Identifier {node = new IdentifierNode($i.text, currentScope);}
   | i=Integer {node = new IntegerConstantNode($i.text);}
   | i=Float {node = new FloatingConstantNode($i.text);}
   | i=String_constant {node = new StringConstantNode($i.text);}
+  | i=Character_constant {node = new CharacterConstantNode($i.text);}
 ;
 
 function_call returns [PNode node]

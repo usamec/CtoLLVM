@@ -17,6 +17,7 @@ tokens {
   FUNCDEC;
   FUNCCALL;
   PDEC;
+  ARRAYSUBS;
 }
 
 @parser::header {
@@ -108,8 +109,12 @@ unary_expression
 	
 postfix_expression
 //	: (primary_expression | '(' type_name ')' '{' initializer_list+ '}') ('[' expression ']' | '(' argument_expression_list? ')' | '.' Identifier | '-'> Identifier | '++' | '--')*
-        : (primary_expression -> primary_expression) ( '(' a=argument_expression_list? ')' -> 
-          ^(FUNCCALL $postfix_expression $a?) )*
+        : (primary_expression -> primary_expression) 
+          ( '(' a=argument_expression_list? ')' -> 
+            ^(FUNCCALL $postfix_expression $a?) |
+            '[' e=expression ']' ->
+            ^(ARRAYSUBS $postfix_expression $e)
+          )*
 	;
 //
 argument_expression_list
@@ -122,6 +127,7 @@ primary_expression
 	| Integer
         | Float
         | String_constant
+        | Character_constant
         | '('! expression ')'!
 	;
 	
@@ -603,6 +609,9 @@ fragment C_char
 ;
 
 Character_constant
+@after {
+  setText(Util.unescapeCString(getText().substring(1, getText().length()-1)));  
+}
 : '\''C_char'\''
 ;
 

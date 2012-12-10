@@ -2,9 +2,9 @@ package ctollvm;
 public class IntegerConstantEvalResult extends EvalResult {
   int value = 0;
 
-  public IntegerConstantEvalResult(int value) {
+  public IntegerConstantEvalResult(int value, Type type) {
     this.value = value;
-    this.type = TypeSystem.getInstance().getType("int");
+    this.type = type;
   }
 
   public String getRepresentation() {
