@@ -185,9 +185,9 @@ function_definition
 //
 statement
 //	: labeled_statement
-//	| compound_statement
-	: expression_statement
-//	| selection_statement
+	: compound_statement
+	| expression_statement
+	| selection_statement
 //	| iteration_statement
 //	| jump_statement
 	;
@@ -239,10 +239,10 @@ empty_statement
         ;
 
 //
-//selection_statement
-//	: 'if' '(' expression ')' statement  ('else' statement) ?
+selection_statement
+	: 'if'^ '('! expression ')'! statement  ('else'! statement) ?
 //	| 'switch' '(' expression ')' statement
-//	;
+	;
 //	
 //
 // jump_statement

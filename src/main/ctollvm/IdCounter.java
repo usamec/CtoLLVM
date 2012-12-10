@@ -9,4 +9,8 @@ public class IdCounter {
   public static String GetNewTmpVal() {
     return String.format("%%tmp.val.%d", GetNewId());
   }
+  
+  public static String GetNewLabel() {
+    return String.format("label%d", GetNewId());
+  }
 }
