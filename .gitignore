@@ -1,4 +1,6 @@
 *.class
 *.swp
+*.c
+*.ll
 src/main/ctollvm/parser/
 build/classes/
