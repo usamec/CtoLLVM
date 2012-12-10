@@ -7,9 +7,10 @@ public class PrimitiveType implements Type {
   private int size;
   private boolean signed;
   private boolean isVoid;
+  private boolean isBool;
   
   public PrimitiveType(String repr, boolean integral, boolean doubl, int size,
-                       boolean signed, String crepr, boolean isVoid) {
+                       boolean signed, String crepr, boolean isVoid, boolean isBool) {
     this.repr = repr;
     this.integral = integral;
     this.doubl = doubl;
@@ -17,6 +18,7 @@ public class PrimitiveType implements Type {
     this.signed = signed;
     this.crepr = crepr;
     this.isVoid = isVoid;
+    this.isBool = isBool;
   }
 
   public String getCrepr() {
@@ -53,5 +55,9 @@ public class PrimitiveType implements Type {
 
   public boolean isFunction() {
     return false;
+  }
+
+  public boolean isBool() {
+    return isBool;
   }
 }

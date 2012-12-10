@@ -41,4 +41,8 @@ public class PointerType implements Type {
   public boolean isFunction() {
     return false;
   }
+
+  public boolean isBool() {
+    return false;
+  }
 }

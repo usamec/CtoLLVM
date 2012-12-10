@@ -10,4 +10,5 @@ public interface Type {
   public boolean isPointer();
   public boolean isVoid();
   public boolean isFunction();
+  public boolean isBool();
 }

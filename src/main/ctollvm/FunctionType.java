@@ -63,4 +63,7 @@ public class FunctionType implements Type {
     return true;
   }
 
+  public boolean isBool() {
+    return false;
+  }
 }

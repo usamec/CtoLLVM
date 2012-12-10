@@ -17,7 +17,11 @@ public class IfStatementNode implements PNode {
     EvalResult exp = expression.produceOutput(out);
     
     if (exp.type != TypeSystem.getInstance().getType("_Bool")) {
-      throw new Exception("Non bool comparisons are not supported yet.");
+      EvalResult exp2 = TypeSystem.getInstance().convertTo(
+          TypeSystem.getInstance().getType("_Bool"), exp, out);
+      if (exp2 == null)
+        throw new Exception("Bad time in if expression.");
+      exp = exp2;
     }
     
     String labelif = IdCounter.GetNewLabel();

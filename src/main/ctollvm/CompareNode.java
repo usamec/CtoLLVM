@@ -15,23 +15,23 @@ public class CompareNode implements PNode {
   }
   @Override
   public EvalResult produceOutput(PrintStream out) throws Exception {
-	HashMap<String, String> signed_comparators = new HashMap<String, String>();
-	HashMap<String, String> unsigned_comparators = new HashMap<String, String>();
-	HashMap<String, String> floating_comparators = new HashMap<String, String>();
-	signed_comparators.put("<", "slt");
-	signed_comparators.put("<=", "sle");
-	signed_comparators.put(">", "sgt");
-	signed_comparators.put(">=", "sge");
-	
-	unsigned_comparators.put("<", "ult");
-	unsigned_comparators.put("<=", "ule");
-	unsigned_comparators.put(">", "ugt");
-	unsigned_comparators.put(">=", "uge");
-	
-	floating_comparators.put("<", "olt");
-	floating_comparators.put("<=", "ole");
-	floating_comparators.put(">", "ogt");
-	floating_comparators.put(">=", "oge");
+    HashMap<String, String> signed_comparators = new HashMap<String, String>();
+    HashMap<String, String> unsigned_comparators = new HashMap<String, String>();
+    HashMap<String, String> floating_comparators = new HashMap<String, String>();
+    signed_comparators.put("<", "slt");
+    signed_comparators.put("<=", "sle");
+    signed_comparators.put(">", "sgt");
+    signed_comparators.put(">=", "sge");
+
+    unsigned_comparators.put("<", "ult");
+    unsigned_comparators.put("<=", "ule");
+    unsigned_comparators.put(">", "ugt");
+    unsigned_comparators.put(">=", "uge");
+
+    floating_comparators.put("<", "olt");
+    floating_comparators.put("<=", "ole");
+    floating_comparators.put(">", "ogt");
+    floating_comparators.put(">=", "oge");
 	
     EvalResult l = lhs.produceOutput(out);
     EvalResult r = rhs.produceOutput(out);
