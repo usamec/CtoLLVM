@@ -548,10 +548,7 @@ fragment Float_suffix
 : ('f'|'F'|'l'|'L')
 ;
 
-Float     
-: Digit_not_null Digit* ('.' Digit*)? Exponent? Float_suffix?
-| '0'?'.' Digit* Exponent? Float_suffix?
-;
+
 
 
 fragment Integer_suffix
@@ -567,6 +564,11 @@ fragment Integer_body
 
 Integer
 : Integer_body //Integer_suffix?
+;
+
+Float     
+: Digit_not_null Digit* ('.' Digit*)? Exponent? Float_suffix?
+| '0'?'.' Digit* Exponent? Float_suffix?
 ;
 
 Punctuation

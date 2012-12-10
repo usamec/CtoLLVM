@@ -104,8 +104,8 @@ expression returns [PNode node]
   | ^(UNARYADDRESS a=expression) {node = new AddressNode($a.node);}
   | f=function_call {node = $f.node;}
   | i=Identifier {node = new IdentifierNode($i.text, currentScope);}
-  | i=Integer_constant {node = new IntegerConstantNode($i.text);}
-  | i=Floating_constant {node = new FloatingConstantNode($i.text);}
+  | i=Integer {node = new IntegerConstantNode($i.text);}
+  | i=Float {node = new FloatingConstantNode($i.text);}
   | i=String_constant {node = new StringConstantNode($i.text);}
 ;
 
