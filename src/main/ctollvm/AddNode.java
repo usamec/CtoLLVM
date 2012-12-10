@@ -16,6 +16,21 @@ public class AddNode implements PNode {
     EvalResult l = lhs.produceOutput(out);
     EvalResult r = rhs.produceOutput(out);
 
+    // Najprv vyriesime scitanie typu pointer + integer
+    if (r.type.isPointer() && l.type.isIntegral()) {
+      EvalResult tmp = l;
+      l = r;
+      r = tmp;
+    }
+
+    if (l.type.isPointer() && r.type.isIntegral()) {
+      EvalResult res = new EvalResult(l.type);
+      out.printf("%s = getelementptr %s %s, %s %s\n",
+          res.getRepresentation(), l.type.getRepresentation(),
+          l.getRepresentation(), r.type.getRepresentation(), r.getRepresentation());
+      return res;
+    }
+
     if (l.type != r.type) {
       EvalResult l1 = TypeSystem.getInstance().unifyTypes(l, r, out);
       if (l1 == null) {
@@ -29,7 +44,6 @@ public class AddNode implements PNode {
         l = l1;
       }
     }
-    // TODO: scitanie pri pointeroch
 
     EvalResult res = new EvalResult(l.type);
 
@@ -41,6 +55,8 @@ public class AddNode implements PNode {
       out.println(String.format("%s = fadd %s %s, %s", 
           res.getRepresentation(), l.type.getRepresentation(),
           l.getRepresentation(), r.getRepresentation()));
+    } else {
+      throw new Exception("Wrong types for addition");
     }
 
     return res;
