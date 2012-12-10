@@ -188,7 +188,7 @@ statement
 	: compound_statement
 	| expression_statement
 	| selection_statement
-//	| iteration_statement
+	| iteration_statement
 //	| jump_statement
 	;
 //
@@ -197,19 +197,19 @@ statement
 //	  |  'for' '(' declaration expression? ';'expression? ')' statement
 //	  ;  
 //  
-//while_iteration  
-//	  :  'while' '(' expression ')' statement
-//	  ;
+while_iteration  
+	  :  'while'^ '('! expression ')'! statement
+	  ;
 //  
 //do_iteration
 //	  : 'do' statement 'while' '(' expression ')' ';'
 //	  ;  	
 //  
-//iteration_statement
+iteration_statement
 //	: for_iteration
-//	| while_iteration
+	: while_iteration
 //	| do_iteration   
-//	;
+	;
 //
 //labeled_statement
 //	:  Identifier ':' statement

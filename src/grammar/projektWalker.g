@@ -75,12 +75,18 @@ block_item_list returns [PNode node]
 statement returns [PNode node]
   : (expression {node = $expression.node;} |
      compound_statement {node = $compound_statement.node;} |
-     selection_statement {node = $selection_statement.node;} )
+     selection_statement {node = $selection_statement.node;} |
+     iteration_statement {node = $iteration_statement.node;} )
 ;
 
 selection_statement returns [PNode node]
   : ^('if' e=expression s1=statement s2=statement?) {node = new IfStatementNode(
       $e.node, $s1.node, $s2.node);}
+;
+
+iteration_statement returns [PNode node]
+  : ^('while' e=expression s=statement) {node = new WhileStatementNode(
+      $e.node, $s.node);}
 ;
 
 declaration returns [PNode node]
