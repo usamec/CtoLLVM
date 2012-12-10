@@ -144,6 +144,14 @@ public class TypeSystem {
       return res;
     }
 
+    if (new_type.isPointer() && result.type.isIntegral()) {
+      EvalResult res = new EvalResult(new_type);
+      out.printf("%s = inttoptr %s %s to %s\n",
+          res.getRepresentation(), result.type.getRepresentation(),
+          result.getRepresentation(), new_type.getRepresentation());
+      return res;
+    }
+
     // TODO: konverzie toho isteho s inym poctom bitov
     return null;
   }

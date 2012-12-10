@@ -23,6 +23,7 @@
   <target name="generate" depends="clean">
     <echo>Generating the lexer and parser...</echo>
     <java classname="org.antlr.Tool" fork="true" failonerror="true">
+      <arg value="-make"/>
       <arg value="-fo" />
       <arg value="src/main/ctollvm/parser/" />
       <arg value="src/grammar/projekt.g" />
@@ -30,6 +31,7 @@
     </java>
     <echo>Generating walker...</echo>
     <java classname="org.antlr.Tool" fork="true" failonerror="true">
+      <arg value="-make"/>
       <arg value="-fo" />
       <arg value="src/main/ctollvm/parser/" />
       <arg value="src/grammar/projektWalker.g" />
