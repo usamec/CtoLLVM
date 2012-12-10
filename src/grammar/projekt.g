@@ -68,13 +68,13 @@ parse
 //	
 //	
 //
-//relational_expression
-//:	(shift_expression) (Relational_operator shift_expression)*
-//	;
+relational_expression
+:	(shift_expression) (('<=' | '>=' | '<' | '>')^  shift_expression)*
+	;
 //
-//shift_expression
-//:	(additive_expression) (Shift_operator additive_expression)*
-//	;
+shift_expression
+:	(additive_expression)// (Shift_operator additive_expression)*
+	;
 //	
 additive_expression
 //:   (multiplicative_expression -> multiplicative_expression)
@@ -136,7 +136,7 @@ assignment_expression
 //	;
 //
 conditional_expression
-  : additive_expression
+  : relational_expression
 //	: logical_or_expression ( | logical_or_expression '?' expression ':' conditional_expression )
 	; 	
 //	
@@ -515,9 +515,9 @@ Keyword
 //: '+' | '-'
 //;
 
-Relational_operator
-:    '<=' | '>=' | '<' | '>' 
-;
+//Relational_operator
+//:    '<=' | '>=' | '<' | '>' 
+//;
 
 Equality_operator
 : '!=' | '=='

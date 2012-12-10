@@ -17,9 +17,13 @@ public class TypeSystem {
     mapping = new HashMap<String, Type>();
     mapping.put("int", new PrimitiveType("i32", true, false, 4, true, "int", false));
     mapping.put("double", new PrimitiveType("double", false, true, 8, true, "double", false));
+    mapping.put("long", mapping.get("int"));
+    mapping.put("short", new PrimitiveType("i16", true, false, 2, true, "int", false));
+    mapping.put("float", new PrimitiveType("float", false, true, 4, true, "float", false));
     // LLVM nemoze mat pointre na void, tak sa interne urobia ako i8
     mapping.put("void", new PrimitiveType("i8", false, false, 0, false, "void", true)); 
     mapping.put("char", new PrimitiveType("i8", true, false, 1, true, "char", false));
+    mapping.put("_Bool", new PrimitiveType("i1", true, false, 1, false, "_Bool", false));
   }
 
   public static TypeSystem getInstance() {

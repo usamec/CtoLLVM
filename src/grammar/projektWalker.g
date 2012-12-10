@@ -98,6 +98,10 @@ expression returns [PNode node]
   | ^('/' a=expression b=expression) {node = null;}
   | ^('%' a=expression b=expression) {node = null;}
   | ^('=' a=expression b=expression) {node = new AssigmentNode($a.node, $b.node);}
+  | ^('<' a=expression b=expression) {node = new CompareNode($a.node, $b.node, "<");}
+  | ^('>' a=expression b=expression) {node = new CompareNode($a.node, $b.node, ">");}
+  | ^('<=' a=expression b=expression) {node = new CompareNode($a.node, $b.node, "<=");}
+  | ^('>=' a=expression b=expression) {node = new CompareNode($a.node, $b.node, ">=");}
   | ^(UNARYPLUS a=expression) 
   | ^(UNARYMINUS a=expression)
   | ^(UNARYDEREFERENCE a=expression) {node = new DereferenceNode($a.node);}
