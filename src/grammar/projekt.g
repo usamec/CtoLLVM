@@ -195,7 +195,7 @@ statement
 	| expression_statement
 	| selection_statement
 	| iteration_statement
-//	| jump_statement
+	| jump_statement
 	;
 //
 //for_iteration 
@@ -251,12 +251,12 @@ selection_statement
 	;
 //	
 //
-// jump_statement
+ jump_statement
 //	: 'goto' Identifier ';'
 //	| 'continue' ';'
 //	| 'break'  ';'
-//	| 'return' expression ? ';'
-//	;
+	: 'return'^ expression ? ';'!
+	;
 //
 
 declaration

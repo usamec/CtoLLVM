@@ -76,7 +76,8 @@ statement returns [PNode node]
   : (expression {node = $expression.node;} |
      compound_statement {node = $compound_statement.node;} |
      selection_statement {node = $selection_statement.node;} |
-     iteration_statement {node = $iteration_statement.node;} )
+     iteration_statement {node = $iteration_statement.node;} |
+     jump_statement {node = $jump_statement.node;} )
 ;
 
 selection_statement returns [PNode node]
@@ -87,6 +88,10 @@ selection_statement returns [PNode node]
 iteration_statement returns [PNode node]
   : ^('while' e=expression s=statement) {node = new WhileStatementNode(
       $e.node, $s.node);}
+;
+
+jump_statement returns [PNode node]
+  : ^('return' e=expression?) {node = new ReturnStatementNode($e.node, currentScope);}
 ;
 
 declaration returns [PNode node]

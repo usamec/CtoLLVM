@@ -77,6 +77,8 @@ public class FunctionDefinitionNode implements PNode {
     }
     vf = scope.parent().addVariable(name, fType);
     vf.defined = true;
+
+    scope.setFunctionReturnType(t);
    
     out.println(") {");
 

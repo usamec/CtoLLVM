@@ -22,6 +22,9 @@ public class Scope {
   private Scope parent;
   private Map<String, Variable> variables;
 
+  // Aby sme pri returne z funkcie vedeli typ funkcie
+  private Type functionReturnType = null;
+
 
   public Scope() {
     this(null);
@@ -34,6 +37,18 @@ public class Scope {
 
   public Scope parent() {
     return parent;
+  }
+
+  public void setFunctionReturnType(Type t) {
+    functionReturnType = t;
+  }
+
+  public Type getFunctionReturnType() {
+    if (functionReturnType != null)
+      return functionReturnType;
+    if (parent != null)
+      return parent.getFunctionReturnType();
+    return null;
   }
 
   public boolean isGlobal() {

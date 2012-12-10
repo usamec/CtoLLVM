@@ -14,13 +14,13 @@
     <mkdir dir="build/classes/" />
   </target>
 
-  <target name="compile" depends="clean">
+  <target name="compile">
     <javac srcdir="src/main/" destdir="build/classes/" includeantruntime="false">
       <classpath refid="classpath" />
     </javac>
   </target>
 
-  <target name="generate" depends="clean">
+  <target name="generate">
     <echo>Generating the lexer and parser...</echo>
     <java classname="org.antlr.Tool" fork="true" failonerror="true">
       <arg value="-make"/>
