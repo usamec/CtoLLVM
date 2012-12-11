@@ -36,10 +36,6 @@ public class RemNode implements PNode {
       out.println(String.format("%s = srem %s %s, %s", 
           res.getRepresentation(), l.type.getRepresentation(),
           l.getRepresentation(), r.getRepresentation()));
-    } else if (l.type.isDouble()) {
-      out.println(String.format("%s = frem %s %s, %s", 
-          res.getRepresentation(), l.type.getRepresentation(),
-          l.getRepresentation(), r.getRepresentation()));
     } else {
       throw new Exception("Wrong types for remainder");
     }
