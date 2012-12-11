@@ -5,10 +5,12 @@ import java.lang.Exception;
 public class WhileStatementNode implements PNode {
   private PNode expression;
   private PNode statement;
+  private Scope scope;
 
-  public WhileStatementNode(PNode expression, PNode statement) {
+  public WhileStatementNode(PNode expression, PNode statement, Scope scope) {
     this.expression = expression;
     this.statement = statement;
+    this.scope = scope;
   }
   @Override
   public EvalResult produceOutput(PrintStream out) throws Exception {
@@ -23,16 +25,18 @@ public class WhileStatementNode implements PNode {
       EvalResult exp2 = TypeSystem.getInstance().convertTo(
           TypeSystem.getInstance().getType("_Bool"), exp, out);
       if (exp2 == null)
-        throw new Exception("Bad time in if expression.");
+        throw new Exception("Bad type in while expression.");
       exp = exp2;
     }
     
     out.printf("br i1 %s, label %%%s, label %%%s\n", exp.getRepresentation(), 
         labelstart, labelafter);
     out.printf("%s:\n", labelstart);
+    scope.pushBreakLabel(labelafter);
     statement.produceOutput(out);
     out.printf("br label %%%s\n", labelcond);
     out.printf("%s:\n", labelafter);
+    scope.popBreakLabel();
     return null;
   }
 }

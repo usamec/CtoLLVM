@@ -3,8 +3,7 @@ import org.antlr.runtime.*;
 import org.antlr.runtime.tree.*;
 import org.antlr.stringtemplate.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Scope {
   class Variable {
@@ -21,6 +20,7 @@ public class Scope {
 
   private Scope parent;
   private Map<String, Variable> variables;
+  private Stack<String> breakLabels;
 
   // Aby sme pri returne z funkcie vedeli typ funkcie
   private Type functionReturnType = null;
@@ -33,10 +33,28 @@ public class Scope {
   public Scope(Scope p) {
     parent = p;
     variables = new HashMap<String, Variable>();
+    breakLabels = new Stack<String>();
   }
 
   public Scope parent() {
     return parent;
+  }
+
+  public void pushBreakLabel(String label) {
+    breakLabels.push(label);
+  }
+
+  public void popBreakLabel() {
+    breakLabels.pop();
+  }
+
+  public String getBreakLabel() {
+    if (breakLabels.empty()) {
+      if (parent != null)
+        return parent.getBreakLabel();
+      return null;
+    }
+    return breakLabels.peek();
   }
 
   public void setFunctionReturnType(Type t) {
