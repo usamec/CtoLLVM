@@ -253,8 +253,8 @@ selection_statement
 //
  jump_statement
 //	: 'goto' Identifier ';'
-//	| 'continue' ';'
-	: 'break'  ';'!
+	: 'continue' ';'!
+	| 'break'  ';'!
 	| 'return'^ expression ? ';'!
 	;
 //

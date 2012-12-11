@@ -21,6 +21,7 @@ public class Scope {
   private Scope parent;
   private Map<String, Variable> variables;
   private Stack<String> breakLabels;
+  private Stack<String> continueLabels;
 
   // Aby sme pri returne z funkcie vedeli typ funkcie
   private Type functionReturnType = null;
@@ -34,6 +35,7 @@ public class Scope {
     parent = p;
     variables = new HashMap<String, Variable>();
     breakLabels = new Stack<String>();
+    continueLabels = new Stack<String>();
   }
 
   public Scope parent() {
@@ -55,6 +57,23 @@ public class Scope {
       return null;
     }
     return breakLabels.peek();
+  }
+
+  public void pushContinueLabel(String label) {
+    continueLabels.push(label);
+  }
+
+  public void popContinueLabel() {
+    continueLabels.pop();
+  }
+
+  public String getContinueLabel() {
+    if (continueLabels.empty()) {
+      if (parent != null)
+        return parent.getContinueLabel();
+      return null;
+    }
+    return continueLabels.peek();
   }
 
   public void setFunctionReturnType(Type t) {

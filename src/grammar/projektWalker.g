@@ -93,6 +93,7 @@ iteration_statement returns [PNode node]
 jump_statement returns [PNode node]
   : ^('return' e=expression?) {node = new ReturnStatementNode($e.node, currentScope);}
   | 'break' {node = new BreakStatementNode(currentScope);}
+  | 'continue' {node = new ContinueStatementNode(currentScope);}
 ;
 
 declaration returns [PNode node]

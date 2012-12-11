@@ -33,10 +33,12 @@ public class WhileStatementNode implements PNode {
         labelstart, labelafter);
     out.printf("%s:\n", labelstart);
     scope.pushBreakLabel(labelafter);
+    scope.pushContinueLabel(labelcond);
     statement.produceOutput(out);
     out.printf("br label %%%s\n", labelcond);
     out.printf("%s:\n", labelafter);
     scope.popBreakLabel();
+    scope.popContinueLabel();
     return null;
   }
 }
