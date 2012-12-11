@@ -12,6 +12,7 @@ public class IntegerConstantNode implements PNode {
   public EvalResult produceOutput(PrintStream out) {
     int id = IdCounter.GetNewId();
     // TODO: suffixy
+    // TODO: 0x, 0 zapisy
     return new IntegerConstantEvalResult(
         new Integer(value), TypeSystem.getInstance().getType("int"));
   }

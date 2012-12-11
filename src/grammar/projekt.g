@@ -19,6 +19,7 @@ tokens {
   PDEC;
   ARRAYSUBS;
   IDEC;
+  EMPTYSTAT;
 }
 
 @parser::header {
@@ -194,6 +195,7 @@ statement
 	| selection_statement
 	| iteration_statement
 	| jump_statement
+        | empty_statement
 	;
 //
 //for_iteration 
@@ -239,7 +241,7 @@ expression_statement
 	;	
 //
 empty_statement
-        : ';'!
+        : ';' -> EMPTYSTAT
         ;
 
 //

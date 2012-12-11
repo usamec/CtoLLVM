@@ -77,7 +77,8 @@ statement returns [PNode node]
      compound_statement {node = $compound_statement.node;} |
      selection_statement {node = $selection_statement.node;} |
      iteration_statement {node = $iteration_statement.node;} |
-     jump_statement {node = $jump_statement.node;} )
+     jump_statement {node = $jump_statement.node;} |
+     EMPTYSTAT {node = new EmptyStatementNode();} )
 ;
 
 selection_statement returns [PNode node]
