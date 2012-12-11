@@ -61,9 +61,13 @@ public class TypeSystem {
   }
 
   public Type getTypeForFunction(Type returnValue, List<Type> arguments) {
-    String fType = FunctionType.buildCrepr(returnValue, arguments);
+    return getTypeForFunction(returnValue, arguments, false);
+  }
+
+  public Type getTypeForFunction(Type returnValue, List<Type> arguments, boolean varArgs) {
+    String fType = FunctionType.buildCrepr(returnValue, arguments, varArgs);
     if (!mapping.containsKey(fType)) {
-      Type t = new FunctionType(returnValue, arguments);
+      Type t = new FunctionType(returnValue, arguments, varArgs);
       mapping.put(fType, t);
     }
     return mapping.get(fType);     

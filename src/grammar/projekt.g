@@ -78,9 +78,6 @@ shift_expression
 	;
 //	
 additive_expression
-//:   (multiplicative_expression -> multiplicative_expression)
-//    ( '+' e=multiplicative_expression -> ^('+' $additive_expression $e)
-//    | '-' e=multiplicative_expression -> ^('-' $additive_expression $e))*
 :	(multiplicative_expression) (('+' | '-')^ multiplicative_expression)*
 	;
 	
@@ -177,8 +174,8 @@ parameter_declaration
 	;
 
 function_definition
-        : Type_specifier declarator '(' parameter_type_list? ')' '{' block_item_list '}'
-        -> ^(FUNCDEF Type_specifier declarator parameter_type_list? block_item_list)
+        : Type_specifier declarator '(' parameter_list? ')' '{' block_item_list '}'
+        -> ^(FUNCDEF Type_specifier declarator parameter_list? block_item_list)
 //	: declaration_specifiers declarator declaration_list ? compound_statement
 	;
 //	

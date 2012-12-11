@@ -32,14 +32,16 @@ public class FunctionCallNode implements PNode {
     // TODO: argumenty typu ...
 
     if (ft.arguments.size() != arguments.size()) {
-      throw new Exception("Bad number of arguments");
+      if (!(ft.varArgs && ft.arguments.size() <= arguments.size()))
+        throw new Exception(String.format("Bad number of arguments, act %d expect %d", 
+            arguments.size(), ft.arguments.size()));
     }
 
     EvalResult res;
     List<EvalResult> args = new ArrayList<EvalResult>();
     for (int i = 0; i < arguments.size(); i++) {
       EvalResult ar = arguments.get(i).produceOutput(out);
-      if (ar.type != ft.arguments.get(i)) {
+      if (i < ft.arguments.size() && ar.type != ft.arguments.get(i)) {
         EvalResult ar2 = TypeSystem.getInstance().convertTo(ft.arguments.get(i), ar, out);
         if (ar2 == null) {
           throw new Exception("Incompatible arguments");
@@ -50,12 +52,12 @@ public class FunctionCallNode implements PNode {
     }
     if (ft.returnValue.isVoid()) {
       res = new EvalResult();
-      out.printf("call %s @%s(",
-          ft.returnValue.getRepresentation(), fn.getIdentifierName());  
+      out.printf("call %s* @%s(",
+          ft.getRepresentation(), fn.getIdentifierName());  
     } else {
       res = new EvalResult(ft.returnValue);
-      out.printf("%s = call %s @%s(", res.getRepresentation(),
-          ft.returnValue.getRepresentation(), fn.getIdentifierName());  
+      out.printf("%s = call %s* @%s(", res.getRepresentation(),
+          ft.getRepresentation(), fn.getIdentifierName());  
     }
     for (int i = 0; i < arguments.size(); i++) {
       EvalResult ar = args.get(i);

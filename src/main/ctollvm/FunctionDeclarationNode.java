@@ -8,15 +8,21 @@ public class FunctionDeclarationNode {
   protected String name;
   private Scope scope;
   protected List<FunctionParameterNode> parameters;
+  boolean varArgs = false;
 
   public FunctionDeclarationNode(Scope scope) {
     this.scope = scope;
     this.name = "";
     parameters = new ArrayList<FunctionParameterNode>();
+    varArgs = false;
   }
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public void setVarArgs() {
+    varArgs = true;
   }
 
   public void addParameter(FunctionParameterNode node) {
@@ -50,9 +56,12 @@ public class FunctionDeclarationNode {
       }
       argument_names.add(n.getName());
     }
+    if (varArgs) {
+      out.printf(", ...");
+    }
     out.println(")");
 
-    Type fType = typeSystem.getTypeForFunction(t, arguments);
+    Type fType = typeSystem.getTypeForFunction(t, arguments, varArgs);
     Scope.Variable v = scope.findInScope(name);
     if (v != null) {
       if (v.type != fType) {

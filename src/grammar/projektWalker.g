@@ -113,7 +113,8 @@ function_declaration returns [FunctionDeclarationNode node]
   node = fd;
 }
   : ^(FUNCDEC id=Identifier {fd.setName($id.text);}
-     (p=parameter_declaration {fd.addParameter($p.node);})*)
+     (p=parameter_declaration {fd.addParameter($p.node);})*
+     ('...' {fd.setVarArgs();})?)
 ;
 
 expression returns [PNode node]

@@ -4,21 +4,49 @@ import java.util.*;
 public class FunctionType implements Type {
   public Type returnValue;
   public List<Type> arguments;
+  public boolean varArgs;
 
   public FunctionType(Type returnValue, List<Type> arguments) {
     this.returnValue = returnValue;
     this.arguments = arguments;
+    this.varArgs = false;
+  }
+
+  public FunctionType(Type returnValue, List<Type> arguments, boolean varArgs) {
+    this.returnValue = returnValue;
+    this.arguments = arguments;
+    this.varArgs = varArgs;
   }
 
   public String getRepresentation() {
-    return "";
+    StringBuffer buf = new StringBuffer(returnValue.getRepresentation());
+    buf.append(" (");
+    if (arguments != null) {
+      boolean first = true;
+      for (Type t : arguments) {
+        if (!first) {
+          buf.append(',');
+        }
+        first = false;
+        buf.append(t.getRepresentation());
+      }
+    }
+    if (varArgs) {
+      buf.append(", ...");
+    }
+    buf.append(')');
+    return buf.toString();
   }
 
   static public String buildCrepr(Type returnValue, List<Type> arguments) {
+    return buildCrepr(returnValue, arguments, false);
+  }
+
+  static public String buildCrepr(Type returnValue, List<Type> arguments, boolean varArgs) {
     StringBuffer buf = new StringBuffer(returnValue.getCrepr());
     buf.append('(');
     if (arguments != null) {
-      boolean first = false;
+      boolean first = true;
       for (Type t : arguments) {
         if (!first) {
           buf.append(',');
@@ -26,6 +54,9 @@ public class FunctionType implements Type {
         first = false;
         buf.append(t.getCrepr());
       }
+    }
+    if (varArgs) {
+      buf.append(", ...");
     }
     buf.append(')');
     return buf.toString();
