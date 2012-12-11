@@ -1,7 +1,8 @@
 CtoLLVM
 =======
 
-V terajsom stave kompilator cita subor test.c a vyraba subor test.ll.
+V terajsom stave kompilator cita subor test.c a vyraba subor test.ll. Prikladom skompilovatelneho
+suboru je example.c.
 Kompiluje sa prikazom:
 ant run
 
@@ -9,12 +10,14 @@ Ten pocas behu aj vo formate .dot vypise sparsovany strom (ak ho chceme pouzit, 
 kompilovat prikazom ant run -emacs). Ten sa da copy&pastnut do stranky:
 http://graphviz-dev.appspot.com/
 
+LLVM sa pusta prikazmi: llvm-as -f test.ll && lli test.bc
+
 Podporovane features:
 - scitanie (ostatne vyrazy treba dorobit, je to copy&paste scitanie a usamcovi sa nechce)
 - ||, &&
 - \<, \>, \<=, \>=
 - \*, & (dereferencuj a adresuj)
-- assignment
+- assignment (iba =, ostatne su copy&paste)
 - vsetky druhy konstant (v zakladnych tvaroch)
 - if/else
 - while
@@ -23,3 +26,12 @@ Podporovane features:
 - definicie funkcii so scalar argumentami
 - volanie funkcii
 - polia
+
+Easy TODO:
+- aritmetika (okrem - pre pointre)
+- do while, for
+
+Hard TODO:
+- - pre pointre
+- vsetky mozne dalsie typy (struktury, typedefs, ...)
+- poriadne argumenty funkcii
