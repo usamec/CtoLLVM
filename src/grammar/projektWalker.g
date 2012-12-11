@@ -33,8 +33,7 @@ function_definition returns [PNode node]
   currentScope = currentScope.parent();
 }
   : ^(FUNCDEF t=Type_specifier {fn.setType($t.text);}
-    ('*' {fn.incPointerDepth();})*
-    (fd=function_declaration {fn.setFunctionDeclaration($fd.node);})
+    (fd=dec_node {fn.setFunctionDeclaration($fd.node);})
      b=block_item_list {fn.setBli($b.node);}
    )
 ;
@@ -56,8 +55,7 @@ parameter_declaration returns [FunctionParameterNode node]
   node = fn;
 }
   : ^(PDEC t=Type_specifier {fn.setType($t.text);}
-      ('*' {fn.incPointerDepth();})*
-      id=Identifier {fn.setName($id.text);})
+      d=declarator {fn.setDeclaration($d.node);})
 ;
 
 
@@ -98,45 +96,85 @@ jump_statement returns [PNode node]
 
 declaration returns [PNode node]
 @init {
-  DeclarationNode dn = new DeclarationNode();
+  DeclarationNode dn = new DeclarationNode(currentScope);
   node = dn;
 }
   : ^(DEC t=Type_specifier {dn.setType($t.text);}
-      (d=init_declarator {dn.addDeclaratorNode($d.node);} )*)
+      (d=declarator {dn.addDeclarationProcessor($d.node);} )*)
 ;
 
-init_declarator returns [DeclaratorNode node]
+declarator returns [DeclarationProcessor node]
+  : ^(IDEC (
+       id=Identifier {node = new DeclarationProcessor(); node.setName($id.text);} |
+       dn=dec_node {node = $dn.node;})
+     )
+;
+
+dec_node returns [DeclarationProcessor node]
+  : (fd=function_declarator {node = $fd.node;} |
+     pd=pointer_declarator {node = $pd.node;}
+    )
+;
+
+pointer_declarator returns [DeclarationProcessor node]
 @init {
-  DeclaratorNode dn = new DeclaratorNode(currentScope);
-  node = dn;
+  PointerDeclarationProcessor pp = new PointerDeclarationProcessor();
+  node = pp;
 }
-  : ^(IDEC ('*' {dn.incPointerDepth();})*
-      (id=Identifier {dn.setName($id.text);} |
-       fd=function_declaration {dn.setFunctionDeclaration($fd.node);} |
-       ad=array_declaration {dn.setArrayDeclaration($ad.node);} 
+  : ^(POINTER (
+       id=Identifier {pp.setName($id.text);} |
+       dn=dec_node {pp.setChild($dn.node);}
       ))
 ;
 
-// TODO: upravit to tak, aby sa spracovali aj humusy ale odignorovali
-function_declaration returns [FunctionDeclarationNode node]
+
+function_declarator returns [DeclarationProcessor node]
 @init {
-  FunctionDeclarationNode fd = new FunctionDeclarationNode(currentScope);
-  node = fd;
+  FunctionDeclarationProcessor dp = new FunctionDeclarationProcessor();
+  node = dp;
 }
-  : ^(FUNCDEC id=Identifier {fd.setName($id.text);}
-     (p=parameter_declaration {fd.addParameter($p.node);})*
-     ('...' {fd.setVarArgs();})?)
+  : ^(FUNCDEC (
+       id=Identifier {dp.setName($id.text);} |
+       dn=dec_node {dp.setChild($dn.node);}
+      )
+      (p=parameter_declaration {dp.addParameter($p.node);})*
+      ('...' {dp.setVarArgs();})?)
+      
+      // TODO:argumenty
 ;
 
-array_declaration returns [ArrayDeclarationNode node]
-  : ^(ARRAYDEC
-      (id=Identifier {node = new ArrayDeclarationNode(currentScope, $id.text);}
-       e=expression {node.addSize($e.node);} |
-       ad=array_declaration {node = $ad.node;}
-       e=expression {node.addSize($e.node);}
-      )
-     )
-;
+//init_declarator returns [DeclaratorNode node]
+//@init {
+//  DeclaratorNode dn = new DeclaratorNode(currentScope);
+//  node = dn;
+//}
+//  : ^(IDEC ('*' {dn.incPointerDepth();})*
+//      (id=Identifier {dn.setName($id.text);} |
+//       fd=function_declaration {dn.setFunctionDeclaration($fd.node);} |
+//       ad=array_declaration {dn.setArrayDeclaration($ad.node);} 
+//      ))
+//;
+
+// TODO: upravit to tak, aby sa spracovali aj humusy ale odignorovali
+//function_declaration returns [FunctionDeclarationNode node]
+//@init {
+//  FunctionDeclarationNode fd = new FunctionDeclarationNode(currentScope);
+//  node = fd;
+//}
+//  : ^(FUNCDEC id=Identifier {fd.setName($id.text);}
+//     (p=parameter_declaration {fd.addParameter($p.node);})*
+//     ('...' {fd.setVarArgs();})?)
+//;
+
+//array_declaration returns [ArrayDeclarationNode node]
+//  : ^(ARRAYDEC
+//      (id=Identifier {node = new ArrayDeclarationNode(currentScope, $id.text);}
+//       e=expression {node.addSize($e.node);} |
+//       ad=array_declaration {node = $ad.node;}
+//       e=expression {node.addSize($e.node);}
+//      )
+//     )
+//;
 
 expression returns [PNode node]
   : ^('+' a=expression b=expression) {node = new AddNode($a.node, $b.node);}

@@ -8,29 +8,23 @@ public class FunctionDefinitionNode implements PNode {
   private String type;
   private String name;
   private Scope scope;
-  private int pointerDepth = 0;
   private PNode bli;
   private List<FunctionParameterNode> parameters;
-  private FunctionDeclarationNode declaration;
+  private DeclarationProcessor declaration;
 
   public FunctionDefinitionNode(Scope scope) {
     this.scope = scope;
-    this.pointerDepth = 0;
     this.type = "";
     this.name = "";
     parameters = new ArrayList<FunctionParameterNode>();
   }
 
-  public void setFunctionDeclaration(FunctionDeclarationNode dec) {
+  public void setFunctionDeclaration(DeclarationProcessor dec) {
     declaration = dec;
   }
 
   public void setType(String type) {
     this.type = type;
-  }
-
-  public void incPointerDepth() {
-    this.pointerDepth++;
   }
 
   public void setBli(PNode bli) {
@@ -40,31 +34,25 @@ public class FunctionDefinitionNode implements PNode {
   @Override
   public EvalResult produceOutput(PrintStream out) throws Exception {
     name = declaration.getName();
-    parameters = declaration.getParameters();
     if (!scope.parent().isGlobal()) {
       throw new Exception("Function cannot be defined in local scope");
     }
-
     TypeSystem typeSystem = TypeSystem.getInstance();
     if (!typeSystem.isValidType(type)) {
       throw new Exception(String.format("Invalid type %s", type));
     }    
-    Type t = typeSystem.getType(type, pointerDepth);
+    Type t = typeSystem.getType(type);
+    Type fT = declaration.processTypeAll(t);
+    if (!fT.isFunction()) {
+      throw new Exception("Bad function definition");
+    }
+    FunctionType fType = (FunctionType) fT;
+    Type retvalType = fType.returnValue;
 
-    if (t.isVoid())
+    if (retvalType.isVoid())
       out.print(String.format("define void @%s(", name));
     else 
-      out.print(String.format("define %s @%s(", t.getRepresentation(), name));
-    
-    boolean first = true;
-    List<Type> arguments = new ArrayList<Type>();
-    for (FunctionParameterNode n : parameters) {
-      if (!first) out.print(", ");
-      first = false;
-      out.print(n.getRepresentation());
-      arguments.add(n.getType());
-    }
-    Type fType = typeSystem.getTypeForFunction(t, arguments);
+      out.print(String.format("define %s @%s(", retvalType.getRepresentation(), name));
     Scope.Variable vf = scope.parent().findInScope(name);
     if (vf != null) {
       if (vf.type != fType) {
@@ -77,7 +65,17 @@ public class FunctionDefinitionNode implements PNode {
     vf = scope.parent().addVariable(name, fType);
     vf.defined = true;
 
-    scope.setFunctionReturnType(t);
+    scope.setFunctionReturnType(retvalType);
+
+
+    parameters = declaration.getFunctionParameters();
+    
+    boolean first = true;
+    for (FunctionParameterNode n : parameters) {
+      if (!first) out.print(", ");
+      first = false;
+      out.print(n.getRepresentation());
+    }
    
     out.println(") {");
 
@@ -92,14 +90,14 @@ public class FunctionDefinitionNode implements PNode {
     }
 
     EvalResult res = bli.produceOutput(out);
-    if (t.isVoid()) {
+    if (retvalType.isVoid()) {
       out.println("ret void");
     } else {
       String name1 = String.format("%%tmp.val.%d", IdCounter.GetNewId()); 
-      out.printf("%s = alloca %s\n", name1, t.getRepresentation());
+      out.printf("%s = alloca %s\n", name1, retvalType.getRepresentation());
       String name2 = String.format("%%tmp.val.%d", IdCounter.GetNewId()); 
-      out.printf("%s = load %s* %s\n", name2, t.getRepresentation(), name1);
-      out.printf("ret %s %s\n", t.getRepresentation(), name2);
+      out.printf("%s = load %s* %s\n", name2, retvalType.getRepresentation(), name1);
+      out.printf("ret %s %s\n", retvalType.getRepresentation(), name2);
     }
     
     out.println("}");

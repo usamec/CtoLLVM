@@ -21,6 +21,7 @@ tokens {
   IDEC;
   EMPTYSTAT;
   ARRAYDEC;
+  POINTER;
 }
 
 @parser::header {
@@ -173,7 +174,7 @@ parameter_list
 
 // TODO: fixnut na spravny tvar
 parameter_declaration
-	: Type_specifier pointer* Identifier -> ^(PDEC Type_specifier pointer* Identifier)
+	: Type_specifier declarator -> ^(PDEC Type_specifier ^(IDEC declarator))
 //	| declaration_specifiers abstract_declarator ?
 	;
 
@@ -262,12 +263,14 @@ jump_statement
 //
 
 declaration
+// TODO: miesto Type_specifier tu dat poriadne declaration_specifiers
   : Type_specifier init_declarator? (',' init_declarator)* ';' -> 
       ^(DEC Type_specifier init_declarator*)
 ;
 
 declarator
-	: pointer* direct_declarator
+	: direct_declarator
+        | pointer declarator -> ^(POINTER declarator)
 	;
 
 pointer

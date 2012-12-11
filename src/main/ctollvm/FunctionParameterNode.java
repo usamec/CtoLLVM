@@ -1,44 +1,35 @@
 package ctollvm;
 
 public class FunctionParameterNode {
+  private DeclarationProcessor declaration = null;
   private String type;
-  private String name;
-  private Scope scope;
-  private int pointerDepth = 0;
-  private Type tt = null;
 
-  public void setName(String name) {
-    this.name = name;
+  public FunctionParameterNode() {
+  }
+
+  public void setDeclaration(DeclarationProcessor dec) {
+    declaration = dec;
   }
 
   public void setType(String type) {
     this.type = type;
   }
 
-  public void incPointerDepth() {
-    this.pointerDepth++;
-  }
-
   public Type getType() throws Exception {
-    if (tt == null) {
-      TypeSystem typeSystem = TypeSystem.getInstance();
-      if (!typeSystem.isValidType(type)) {
-        throw new Exception(String.format("Invalid type %s", type));
-      }
-      tt = typeSystem.getType(type, pointerDepth);
-
-      if (tt.isVoid()) {
-        throw new Exception(String.format("Variable cannot have void type"));
-      }
-    }
-    return tt;
+    TypeSystem typeSystem = TypeSystem.getInstance();
+    if (!typeSystem.isValidType(type)) {
+      throw new Exception(String.format("Invalid type %s", type));
+    }    
+    Type t = typeSystem.getType(type);
+    // TODO: ak je typ array, tak zmenit na pointer
+    return declaration.processTypeAll(t);
   }
 
   public String getRepresentation() throws Exception {
-    return String.format("%s %%%s", getType().getRepresentation(), name);
+    return String.format("%s %%%s", getType().getRepresentation(), getName());
   }
 
   public String getName() {
-    return name;
+    return declaration.getName();
   }
 }

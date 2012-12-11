@@ -54,7 +54,6 @@ public class FunctionDeclarationNode {
     List<Type> arguments = new ArrayList<Type>();
     HashSet<String> argument_names = new HashSet<String>();
     for (FunctionParameterNode n : parameters) {
-      // TODO: check for distinct names
       if (!first) out.print(", ");
       first = false;
       out.print(n.getRepresentation());
