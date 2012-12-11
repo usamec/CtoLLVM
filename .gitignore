@@ -1,0 +1,7 @@
+*.class
+*.swp
+*.c
+*.ll
+*.bc
+src/main/ctollvm/parser/
+build/classes/
