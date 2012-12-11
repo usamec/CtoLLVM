@@ -98,14 +98,23 @@ jump_statement returns [PNode node]
 
 declaration returns [PNode node]
 @init {
-  DeclarationNode dn = new DeclarationNode(currentScope);
+  DeclarationNode dn = new DeclarationNode();
   node = dn;
 }
   : ^(DEC t=Type_specifier {dn.setType($t.text);}
-      ('*' {dn.incPointerDepth();})*
+      (d=init_declarator {dn.addDeclaratorNode($d.node);} )*)
+;
+
+init_declarator returns [DeclaratorNode node]
+@init {
+  DeclaratorNode dn = new DeclaratorNode(currentScope);
+  node = dn;
+}
+  : ^(IDEC ('*' {dn.incPointerDepth();})*
       (id=Identifier {dn.setName($id.text);} |
        fd=function_declaration {dn.setFunctionDeclaration($fd.node);}))
 ;
+
 
 function_declaration returns [FunctionDeclarationNode node]
 @init {

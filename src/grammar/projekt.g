@@ -18,6 +18,7 @@ tokens {
   FUNCCALL;
   PDEC;
   ARRAYSUBS;
+  IDEC;
 }
 
 @parser::header {
@@ -248,7 +249,7 @@ selection_statement
 	;
 //	
 //
- jump_statement
+jump_statement
 //	: 'goto' Identifier ';'
 	: 'continue' ';'!
 	| 'break'  ';'!
@@ -257,7 +258,8 @@ selection_statement
 //
 
 declaration
-  : Type_specifier declarator ';' -> ^(DEC Type_specifier declarator)
+  : Type_specifier init_declarator? (',' init_declarator)* ';' -> 
+      ^(DEC Type_specifier init_declarator*)
 ;
 
 declarator
@@ -294,9 +296,9 @@ direct_declarator
 //	: ( init_declarator_list ',') ? init_declarator
 //	;
 //
-//init_declarator
-//	: declarator ( '=' initializer ) ?
-//	;
+init_declarator
+	: declarator -> ^(IDEC declarator) //( '=' initializer ) ?
+	;
 //
 //storage_class_specifier
 //	: 'typedef' 
