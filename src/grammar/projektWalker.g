@@ -141,7 +141,7 @@ array_declaration returns [ArrayDeclarationNode node]
 expression returns [PNode node]
   : ^('+' a=expression b=expression) {node = new AddNode($a.node, $b.node);}
   | ^('-' a=expression b=expression) {node = null;}
-  | ^('*' a=expression b=expression) {node = null;}
+  | ^('*' a=expression b=expression) {node = new MulNode($a.node, $b.node);}
   | ^('/' a=expression b=expression) {node = null;}
   | ^('%' a=expression b=expression) {node = null;}
   | ^('=' a=expression b=expression) {node = new AssigmentNode($a.node, $b.node);}
