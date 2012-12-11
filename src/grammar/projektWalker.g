@@ -130,6 +130,7 @@ expression returns [PNode node]
   | ^('==' a=expression b=expression) {node = null;}
   | ^('!=' a=expression b=expression) {node = null;}
   | ^('&&' a=expression b=expression) {node = new LogicalAndNode($a.node, $b.node);}
+  | ^('||' a=expression b=expression) {node = new LogicalOrNode($a.node, $b.node);}
   | ^(UNARYPLUS a=expression) 
   | ^(UNARYMINUS a=expression)
   | ^(UNARYDEREFERENCE a=expression) {node = new DereferenceNode($a.node);}

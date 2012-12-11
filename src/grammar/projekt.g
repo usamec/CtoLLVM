@@ -42,9 +42,9 @@ parse
 ;
 
 //original OR is left-recursive
-//logical_or_expression
-//:	(logical_and_expression) ('||' logical_and_expression)*
-//	;	 
+logical_or_expression
+:	(logical_and_expression) ('||'^ logical_and_expression)*
+	;	 
 //
 //	
 logical_and_expression
@@ -142,7 +142,7 @@ assignment_expression
 //	;
 //
 conditional_expression
-  : logical_and_expression
+  : logical_or_expression
 //	: logical_or_expression ( | logical_or_expression '?' expression ':' conditional_expression )
 	; 	
 //	
@@ -529,9 +529,9 @@ Keyword
 //: '!=' | '=='
 //	;
                         
-Logical_operator
-:    '&&' |  '||'
-;
+//Logical_operator
+//:    '&&' |  '||'
+//;
 
 //Bitwise_operator
 //:    '&' | '|' | '^'
