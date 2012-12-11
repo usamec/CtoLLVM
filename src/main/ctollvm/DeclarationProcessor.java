@@ -51,10 +51,10 @@ public class DeclarationProcessor {
       child.produceOutput(type, scope, out);
       return;
     }
-    // Predpokladame, ze tento node sa vyrobi len ked mame premennu bez
-    // *, [] a (), takze je finalny
 
-    // TODO: check na global scope
+    if (scope.isGlobal()) {
+      throw new Exception("Global variables not allowed yet");
+    }
 
     if (scope.hasInCurrentScope(name)) {
       throw new Exception(String.format("Variable %s already declared", name));

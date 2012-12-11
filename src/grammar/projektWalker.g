@@ -112,7 +112,8 @@ declarator returns [DeclarationProcessor node]
 
 dec_node returns [DeclarationProcessor node]
   : (fd=function_declarator {node = $fd.node;} |
-     pd=pointer_declarator {node = $pd.node;}
+     pd=pointer_declarator {node = $pd.node;} |
+     ad=array_declarator {node = $ad.node;}
     )
 ;
 
@@ -139,32 +140,20 @@ function_declarator returns [DeclarationProcessor node]
       )
       (p=parameter_declaration {dp.addParameter($p.node);})*
       ('...' {dp.setVarArgs();})?)
-      
-      // TODO:argumenty
 ;
 
-//init_declarator returns [DeclaratorNode node]
-//@init {
-//  DeclaratorNode dn = new DeclaratorNode(currentScope);
-//  node = dn;
-//}
-//  : ^(IDEC ('*' {dn.incPointerDepth();})*
-//      (id=Identifier {dn.setName($id.text);} |
-//       fd=function_declaration {dn.setFunctionDeclaration($fd.node);} |
-//       ad=array_declaration {dn.setArrayDeclaration($ad.node);} 
-//      ))
-//;
-
-// TODO: upravit to tak, aby sa spracovali aj humusy ale odignorovali
-//function_declaration returns [FunctionDeclarationNode node]
-//@init {
-//  FunctionDeclarationNode fd = new FunctionDeclarationNode(currentScope);
-//  node = fd;
-//}
-//  : ^(FUNCDEC id=Identifier {fd.setName($id.text);}
-//     (p=parameter_declaration {fd.addParameter($p.node);})*
-//     ('...' {fd.setVarArgs();})?)
-//;
+array_declarator returns [DeclarationProcessor node]
+@init {
+  ArrayDeclarationProcessor ap = new ArrayDeclarationProcessor();
+  node = ap;
+}
+  : ^(ARRAYDEC (
+       id=Identifier {ap.setName($id.text);} |
+       dn=dec_node {ap.setChild($dn.node);}
+      )
+      e=expression {ap.setExpression($e.node);}
+    )
+;
 
 //array_declaration returns [ArrayDeclarationNode node]
 //  : ^(ARRAYDEC
