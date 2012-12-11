@@ -152,15 +152,51 @@ public class TypeSystem {
       return res;
     }
 
-    // TODO: konverzie toho isteho s inym poctom bitov
+    if (new_type.isDouble() && result.type.isDouble()) {
+      EvalResult res = new EvalResult(new_type);
+      if (new_type.sizeof() > result.type.sizeof()) {
+        out.printf("%s = fpext %s %s to %s\n",
+            res.getRepresentation(), result.type.getRepresentation(),
+            result.getRepresentation(), new_type.getRepresentation());
+      } else {
+        out.printf("%s = fptrunc %s %s to %s\n",
+            res.getRepresentation(), result.type.getRepresentation(),
+            result.getRepresentation(), new_type.getRepresentation());
+      }
+      return res;
+    }
+    if (new_type.isIntegral() && result.type.isIntegral()) {
+      EvalResult res = new EvalResult(new_type);
+      // TODO: toto cele aj pre unsigned
+      if (new_type.sizeof() > result.type.sizeof()) {
+        out.printf("%s = sext %s %s to %s\n",
+            res.getRepresentation(), result.type.getRepresentation(),
+            result.getRepresentation(), new_type.getRepresentation());
+      } else {
+        out.printf("%s = trunc %s %s to %s\n",
+            res.getRepresentation(), result.type.getRepresentation(),
+            result.getRepresentation(), new_type.getRepresentation());
+      }
+      return res;
+    }
+    // TODO: konverzie signed -> unsigned a opacne
     return null;
   }
 
+  // Ak pre unifikaciu treba skonvertoval typ A na typ B, tak vrati novy result pre A
+  // Cize ak toho vlezie (double, int), tak vrati null
+  // Ale ak vlezie (int, double), tak vrati prvy skonvertovany na double
   public EvalResult unifyTypes(EvalResult a, EvalResult b, PrintStream out) {
     if (b.type.isDouble() && a.type.isIntegral()) {
       return convertTo(b.type, a, out);
     }
-    // TODO: konverzie toho isteho s inym poctom bitov
+    if (b.type.isDouble() && a.type.isDouble() && b.type.sizeof() > a.type.sizeof()) {
+      return convertTo(b.type, a, out);
+    }
+    if (b.type.isIntegral() && a.type.isIntegral() && b.type.sizeof() > a.type.sizeof()) {
+      return convertTo(b.type, a, out);
+    }
+    // TODO: konverzie signed -> unsigned a opacne
     return null;
   }
 }
