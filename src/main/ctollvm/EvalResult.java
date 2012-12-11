@@ -32,9 +32,10 @@ public class EvalResult {
     return identifierName;
   }
 
-  public boolean isReturnStatement() {
+  // Toto je hovadina, ktoru som si povodne myslel, ze treba checkovat, ale pojde to i bez nej
+/*  public boolean isReturnStatement() {
     return false;
-  }
+  }*/
 
   public boolean isConstant() {
     return false;

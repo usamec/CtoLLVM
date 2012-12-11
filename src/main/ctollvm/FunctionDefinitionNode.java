@@ -92,17 +92,16 @@ public class FunctionDefinitionNode implements PNode {
     }
 
     EvalResult res = bli.produceOutput(out);
-    if (!res.isReturnStatement()) {
-      if (t.isVoid()) {
-        out.println("ret void");
-      } else {
-        String name1 = String.format("%%tmp.val.%d", IdCounter.GetNewId()); 
-        out.printf("%s = alloca %s\n", name1, t.getRepresentation());
-        String name2 = String.format("%%tmp.val.%d", IdCounter.GetNewId()); 
-        out.printf("%s = load %s* %s\n", name2, t.getRepresentation(), name1);
-        out.printf("ret %s %s\n", t.getRepresentation(), name2);
-      }
+    if (t.isVoid()) {
+      out.println("ret void");
+    } else {
+      String name1 = String.format("%%tmp.val.%d", IdCounter.GetNewId()); 
+      out.printf("%s = alloca %s\n", name1, t.getRepresentation());
+      String name2 = String.format("%%tmp.val.%d", IdCounter.GetNewId()); 
+      out.printf("%s = load %s* %s\n", name2, t.getRepresentation(), name1);
+      out.printf("ret %s %s\n", t.getRepresentation(), name2);
     }
+    
     out.println("}");
 
     return new EvalResult();

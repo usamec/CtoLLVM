@@ -19,7 +19,6 @@ public class BlockItemList implements PNode {
     for (PNode n : statements)
       n.produceOutput(out);
 
-    // TODO: ak bol posledny return, tak vyblublat
     return new EvalResult();
   }
 }
