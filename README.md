@@ -35,3 +35,8 @@ Hard TODO:
 - - pre pointre
 - vsetky mozne dalsie typy (struktury, typedefs, ...)
 - poriadne argumenty funkcii
+
+Ked uz nebude co robit TODO:
+- vyhodnocovanie konstatnych vyrazov
+- checkovanie hranic konstant
+- konstanta co rozlisuje medzi int a long long
