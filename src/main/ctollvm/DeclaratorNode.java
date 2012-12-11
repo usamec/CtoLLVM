@@ -9,6 +9,7 @@ public class DeclaratorNode implements PNode {
   private Scope scope;
   private int pointerDepth = 0;
   private FunctionDeclarationNode functionDeclaration = null;
+  private ArrayDeclarationNode arrayDeclaration = null;
 
   public DeclaratorNode(String type, String name, Scope scope) {
     this.type = type;
@@ -27,6 +28,10 @@ public class DeclaratorNode implements PNode {
     functionDeclaration = fd;
   }
 
+  public void setArrayDeclaration(ArrayDeclarationNode ad) {
+    arrayDeclaration = ad;
+  }
+
   public void setName(String name) {
     this.name = name;
   }
@@ -41,6 +46,13 @@ public class DeclaratorNode implements PNode {
 
   @Override
   public EvalResult produceOutput(PrintStream out) throws Exception {
+    if (functionDeclaration != null && arrayDeclaration != null) {
+      throw new Exception("Some weird declaration");
+    }
+    if (arrayDeclaration != null) {
+      arrayDeclaration.produceOutput(type, pointerDepth, out);
+      return new EvalResult();
+    }
     if (functionDeclaration != null) {
       functionDeclaration.produceOutput(type, pointerDepth, out);
       return new EvalResult();
@@ -56,7 +68,6 @@ public class DeclaratorNode implements PNode {
       if (!typeSystem.isValidType(type)) {
         throw new Exception(String.format("Invalid type %s", type));
       }
-
       
       Type t = typeSystem.getType(type, pointerDepth);
 

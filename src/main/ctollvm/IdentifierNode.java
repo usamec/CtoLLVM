@@ -18,11 +18,20 @@ public class IdentifierNode implements PNode {
     if (v == null) {
       throw new Exception("neznama premenna");
     }
-    EvalResult res = new EvalResult(v.type, v.name);
-    if (!v.type.isFunction()) {
-      out.println(String.format("%s = load %s* %s", res.getRepresentation(),
-            v.type.getRepresentation(), v.name));
+    if (v.type.isArray()) {
+      ArrayType at = (ArrayType) v.type;
+      Type pt = TypeSystem.getInstance().getPointerType(at.getPointerTo());
+      EvalResult res = new EvalResult(pt);
+      out.printf("%s = getelementptr %s* %s, i64 0, i64 0\n",
+          res.getRepresentation(), at.getRepresentation(), v.name);
+      return res;
+    } else {
+      EvalResult res = new EvalResult(v.type, v.name);
+      if (!v.type.isFunction()) {
+        out.println(String.format("%s = load %s* %s", res.getRepresentation(),
+              v.type.getRepresentation(), v.name));
+      }
+      return res;
     }
-    return res;
   }
 }

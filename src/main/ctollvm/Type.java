@@ -11,4 +11,5 @@ public interface Type {
   public boolean isVoid();
   public boolean isFunction();
   public boolean isBool();
+  public boolean isArray(); 
 }

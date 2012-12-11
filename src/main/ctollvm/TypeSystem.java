@@ -60,6 +60,25 @@ public class TypeSystem {
     return tp;
   }
 
+  public Type getArrayType(Type type, int count) {
+    String crep = String.format("%s[%d]", type.getCrepr(), count);
+    if (mapping.containsKey(crep))
+      return getType(crep);
+    Type tp = new ArrayType(type, count);
+    mapping.put(crep, tp);
+    return tp;
+  }
+
+  public Type getPointerType(Type type) {
+    String crep = String.format("%s*", type.getCrepr());
+    if (mapping.containsKey(crep))
+      return getType(crep);
+    Type tp = new PointerType(type);
+    mapping.put(crep, tp);
+    return tp;
+    
+  }
+
   public Type getTypeForFunction(Type returnValue, List<Type> arguments) {
     return getTypeForFunction(returnValue, arguments, false);
   }
@@ -84,8 +103,8 @@ public class TypeSystem {
   }
 
   public Type dereference(Type type) {
-    PointerType pt = (PointerType) type;
-    return pt.pointerTo;
+    PointingType pt = (PointingType) type;
+    return pt.getPointerTo();
   }
 
   public EvalResult convertTo(Type new_type, EvalResult result, PrintStream out) {

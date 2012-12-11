@@ -1,21 +1,23 @@
 package ctollvm;
-public class PointerType implements Type, PointingType {
+public class ArrayType implements Type, PointingType {
   Type pointerTo;
+  int count;
 
   public Type getPointerTo() {
     return pointerTo;
   }
 
-  public PointerType(Type pointerTo) {
+  public ArrayType(Type pointerTo, int count) {
     this.pointerTo = pointerTo;
+    this.count = count;
   }
 
   public String getRepresentation() {
-    return pointerTo.getRepresentation() + "*";
+    return String.format("[%d x %s]", count, pointerTo.getRepresentation());
   }
 
   public String getCrepr() {
-    return pointerTo.getCrepr() + "*";
+    return String.format("%s[%d]", pointerTo.getCrepr(), count);
   }
 
   public boolean isIntegral() {
@@ -31,7 +33,7 @@ public class PointerType implements Type, PointingType {
   }
   
   public int sizeof() {
-    return 8;
+    return count * pointerTo.sizeof();
   }
 
   public boolean isPointer() {
@@ -51,6 +53,6 @@ public class PointerType implements Type, PointingType {
   }
 
   public boolean isArray() {
-    return false;
+    return true;
   }
 }

@@ -112,7 +112,9 @@ init_declarator returns [DeclaratorNode node]
 }
   : ^(IDEC ('*' {dn.incPointerDepth();})*
       (id=Identifier {dn.setName($id.text);} |
-       fd=function_declaration {dn.setFunctionDeclaration($fd.node);}))
+       fd=function_declaration {dn.setFunctionDeclaration($fd.node);} |
+       ad=array_declaration {dn.setArrayDeclaration($ad.node);} 
+      ))
 ;
 
 // TODO: upravit to tak, aby sa spracovali aj humusy ale odignorovali
@@ -124,6 +126,16 @@ function_declaration returns [FunctionDeclarationNode node]
   : ^(FUNCDEC id=Identifier {fd.setName($id.text);}
      (p=parameter_declaration {fd.addParameter($p.node);})*
      ('...' {fd.setVarArgs();})?)
+;
+
+array_declaration returns [ArrayDeclarationNode node]
+  : ^(ARRAYDEC
+      (id=Identifier {node = new ArrayDeclarationNode(currentScope, $id.text);}
+       e=expression {node.addSize($e.node);} |
+       ad=array_declaration {node = $ad.node;}
+       e=expression {node.addSize($e.node);}
+      )
+     )
 ;
 
 expression returns [PNode node]

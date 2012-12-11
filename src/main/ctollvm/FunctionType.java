@@ -97,4 +97,7 @@ public class FunctionType implements Type {
   public boolean isBool() {
     return false;
   }
+  public boolean isArray() {
+    return false;
+  }
 }

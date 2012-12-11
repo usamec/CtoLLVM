@@ -14,4 +14,8 @@ public class IntegerConstantEvalResult extends EvalResult {
   public boolean isLVal() {
     return false;
   }
+
+  public boolean isConstant() {
+    return true;
+  }
 }

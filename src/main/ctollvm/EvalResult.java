@@ -35,4 +35,8 @@ public class EvalResult {
   public boolean isReturnStatement() {
     return false;
   }
+
+  public boolean isConstant() {
+    return false;
+  }
 }

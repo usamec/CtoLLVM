@@ -14,4 +14,8 @@ public class FloatingConstantEvalResult extends EvalResult {
   public boolean isLVal() {
     return false;
   }
+
+  public boolean isConstant() {
+    return true;
+  }
 }

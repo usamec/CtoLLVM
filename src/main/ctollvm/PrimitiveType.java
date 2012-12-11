@@ -60,4 +60,8 @@ public class PrimitiveType implements Type {
   public boolean isBool() {
     return isBool;
   }
+
+  public boolean isArray() {
+    return false;
+  }
 }

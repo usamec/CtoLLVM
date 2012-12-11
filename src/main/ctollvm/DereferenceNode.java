@@ -20,12 +20,18 @@ public class DereferenceNode implements PNode {
 
     Type t2 = TypeSystem.getInstance().dereference(c.type);
 
-    EvalResult res = new EvalResult(t2, c.getRepresentation());
-
-    out.println(String.format("%s = load %s* %s", res.getRepresentation(),
-          res.type.getRepresentation(), c.getRepresentation()));
-
-
-    return res;
+    if (t2.isArray()) {
+      ArrayType at = (ArrayType) t2;
+      Type pt = TypeSystem.getInstance().getPointerType(at.getPointerTo());
+      EvalResult res = new EvalResult(pt);
+      out.printf("%s = getelementptr %s* %s, i64 0, i64 0\n",
+          res.getRepresentation(), at.getRepresentation(), c.getRepresentation());
+      return res;
+    } else {
+      EvalResult res = new EvalResult(t2, c.getRepresentation());
+      out.println(String.format("%s = load %s* %s", res.getRepresentation(),
+            res.type.getRepresentation(), c.getRepresentation()));
+      return res;
+    }
   }
 }

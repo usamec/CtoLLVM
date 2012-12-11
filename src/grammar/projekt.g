@@ -20,6 +20,7 @@ tokens {
   ARRAYSUBS;
   IDEC;
   EMPTYSTAT;
+  ARRAYDEC;
 }
 
 @parser::header {
@@ -282,11 +283,12 @@ direct_declarator
 //      | Identifier '(' parameter_type_list? ')' -> ^(FUNCDEC Identifier parameter_type_list?)
 //;
 	: (Identifier -> Identifier | '(' declarator ')' -> declarator)
-          ('[' type_qualifier_list ? assignment_expression ? ']'
+          ('[' type_qualifier_list ? a=assignment_expression ? ']' -> 
+              ^(ARRAYDEC $direct_declarator $a?) 
           |'[' 'static' type_qualifier_list ? assignment_expression ']'
           |'[' type_qualifier_list 'static' assignment_expression ']'
           |'[' type_qualifier_list ? '*' ']'
-          |'(' parameter_type_list? ')' -> ^(FUNCDEC $direct_declarator parameter_type_list?) 
+          |'(' p=parameter_type_list? ')' -> ^(FUNCDEC $direct_declarator $p?) 
 //          |'(' identifier_list ? ')'
            )*
 	;
