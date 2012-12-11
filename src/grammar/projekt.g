@@ -47,25 +47,25 @@ parse
 //	;	 
 //
 //	
-//logical_and_expression
-//: 	(inclusive_or_expression) ('&&' inclusive_or_expression)*
-//	;
+logical_and_expression
+: 	(inclusive_or_expression) ('&&'^ inclusive_or_expression)*
+	;
 //	
-//inclusive_or_expression
-//:	(exclusive_or_expression) ('|' exclusive_or_expression)*
-//	;
+inclusive_or_expression
+:	(exclusive_or_expression)// ('|' exclusive_or_expression)*
+	;
 //
-//exclusive_or_expression
-//: 	(and_expression) ('^' and_expression)*	
-//	;
+exclusive_or_expression
+: 	(and_expression)// ('^' and_expression)*	
+	;
 //
-//and_expression
-//:	(equality_expression) ('&' equality_expression)*
-//	;
+and_expression
+:	(equality_expression)// ('&' equality_expression)*
+	;
 //
-//equality_expression
-//:	(relational_expression) (Equality_operator relational_expression)*
-//	;
+equality_expression
+:	(relational_expression) (('!=' | '==')^ relational_expression)*
+	;
 //	
 //	
 //
@@ -142,7 +142,7 @@ assignment_expression
 //	;
 //
 conditional_expression
-  : relational_expression
+  : logical_and_expression
 //	: logical_or_expression ( | logical_or_expression '?' expression ':' conditional_expression )
 	; 	
 //	
@@ -525,9 +525,9 @@ Keyword
 //:    '<=' | '>=' | '<' | '>' 
 //;
 
-Equality_operator
-: '!=' | '=='
-	;
+//Equality_operator
+//: '!=' | '=='
+//	;
                         
 Logical_operator
 :    '&&' |  '||'
