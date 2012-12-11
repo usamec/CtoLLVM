@@ -11,6 +11,7 @@ public class FunctionDefinitionNode implements PNode {
   private int pointerDepth = 0;
   private PNode bli;
   private List<FunctionParameterNode> parameters;
+  private FunctionDeclarationNode declaration;
 
   public FunctionDefinitionNode(Scope scope) {
     this.scope = scope;
@@ -20,8 +21,8 @@ public class FunctionDefinitionNode implements PNode {
     parameters = new ArrayList<FunctionParameterNode>();
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setFunctionDeclaration(FunctionDeclarationNode dec) {
+    declaration = dec;
   }
 
   public void setType(String type) {
@@ -32,16 +33,14 @@ public class FunctionDefinitionNode implements PNode {
     this.pointerDepth++;
   }
 
-  public void addParameter(FunctionParameterNode node) {
-    parameters.add(node);
-  }
-
   public void setBli(PNode bli) {
     this.bli = bli;
   }
 
   @Override
   public EvalResult produceOutput(PrintStream out) throws Exception {
+    name = declaration.getName();
+    parameters = declaration.getParameters();
     if (!scope.parent().isGlobal()) {
       throw new Exception("Function cannot be defined in local scope");
     }

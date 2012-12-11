@@ -29,6 +29,14 @@ public class FunctionDeclarationNode {
     parameters.add(node);
   }
 
+  public List<FunctionParameterNode> getParameters() {
+    return parameters;
+  }
+
+  public String getName() {
+    return name;
+  }
+
   public void produceOutput(String type, int pointerDepth, PrintStream out) throws Exception {
     if (!scope.isGlobal()) {
       throw new Exception("Function cannot be declared in local scope");

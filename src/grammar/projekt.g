@@ -154,7 +154,7 @@ expression
 //	(: external_declaration) (external_declaration)*
 //	;
 //
-external_declaration
+external_declaration options {backtrack=true;}
 	: function_definition
 	| declaration	
 	;
@@ -170,14 +170,15 @@ parameter_list
         parameter_declaration (parameter_declaration)* 
   ;
 
+// TODO: fixnut na spravny tvar
 parameter_declaration
 	: Type_specifier pointer* Identifier -> ^(PDEC Type_specifier pointer* Identifier)
 //	| declaration_specifiers abstract_declarator ?
 	;
 
 function_definition
-        : Type_specifier declarator '(' parameter_list? ')' '{' block_item_list '}'
-        -> ^(FUNCDEF Type_specifier declarator parameter_list? block_item_list)
+        : Type_specifier declarator '{' block_item_list '}'
+        -> ^(FUNCDEF Type_specifier declarator block_item_list)
 //	: declaration_specifiers declarator declaration_list ? compound_statement
 	;
 //	
@@ -252,8 +253,8 @@ selection_statement
 //	
 //
 jump_statement
-//	: 'goto' Identifier ';'
-	: 'continue' ';'!
+	: 'goto' Identifier ';' -> EMPTYSTAT  // F*ck GOTO!!!
+	| 'continue' ';'!
 	| 'break'  ';'!
 	| 'return'^ expression ? ';'!
 	;
@@ -277,11 +278,18 @@ type_qualifier_list
 	;
 
 direct_declarator
-      : Identifier
-      | Identifier '(' parameter_type_list? ')' -> ^(FUNCDEC Identifier parameter_type_list?)
-;
-//	: (Identifier | '(' declarator ')') ('[' type_qualifier_list ? assignment_expression ? ']' | '[' 'static' type_qualifier_list ? assignment_expression ']' | '[' type_qualifier_list 'static' assignment_expression ']' | '[' type_qualifier_list ? '*' ']' | '(' parameter_type_list ')' | '(' identifier_list ? ')')*
-//	;
+//      : Identifier
+//      | Identifier '(' parameter_type_list? ')' -> ^(FUNCDEC Identifier parameter_type_list?)
+//;
+	: (Identifier -> Identifier | '(' declarator ')' -> declarator)
+          ('[' type_qualifier_list ? assignment_expression ? ']'
+          |'[' 'static' type_qualifier_list ? assignment_expression ']'
+          |'[' type_qualifier_list 'static' assignment_expression ']'
+          |'[' type_qualifier_list ? '*' ']'
+          |'(' parameter_type_list? ')' -> ^(FUNCDEC $direct_declarator parameter_type_list?) 
+//          |'(' identifier_list ? ')'
+           )*
+	;
 
 //declaration
 //	: declaration_specifiers init_declarator_list ? ';'

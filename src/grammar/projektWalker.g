@@ -34,9 +34,8 @@ function_definition returns [PNode node]
 }
   : ^(FUNCDEF t=Type_specifier {fn.setType($t.text);}
     ('*' {fn.incPointerDepth();})*
-    id=Identifier {fn.setName($id.text);}
-    (p=parameter_declaration {fn.addParameter($p.node);})*
-    b=block_item_list {fn.setBli($b.node);}
+    (fd=function_declaration {fn.setFunctionDeclaration($fd.node);})
+     b=block_item_list {fn.setBli($b.node);}
    )
 ;
 
@@ -116,7 +115,7 @@ init_declarator returns [DeclaratorNode node]
        fd=function_declaration {dn.setFunctionDeclaration($fd.node);}))
 ;
 
-
+// TODO: upravit to tak, aby sa spracovali aj humusy ale odignorovali
 function_declaration returns [FunctionDeclarationNode node]
 @init {
   FunctionDeclarationNode fd = new FunctionDeclarationNode(currentScope);
