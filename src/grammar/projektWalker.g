@@ -155,16 +155,6 @@ array_declarator returns [DeclarationProcessor node]
     )
 ;
 
-//array_declaration returns [ArrayDeclarationNode node]
-//  : ^(ARRAYDEC
-//      (id=Identifier {node = new ArrayDeclarationNode(currentScope, $id.text);}
-//       e=expression {node.addSize($e.node);} |
-//       ad=array_declaration {node = $ad.node;}
-//       e=expression {node.addSize($e.node);}
-//      )
-//     )
-//;
-
 expression returns [PNode node]
   : ^('+' a=expression b=expression) {node = new AddNode($a.node, $b.node);}
   | ^('-' a=expression b=expression) {node = null;}
