@@ -85,7 +85,10 @@ selection_statement returns [PNode node]
 
 iteration_statement returns [PNode node]
   : ^('while' e=expression s=statement) {node = new WhileStatementNode(
-      $e.node, $s.node, currentScope);}
+      $e.node, $s.node, currentScope);} 
+//	  |
+//	^('do' s=statement e=expression) {node = new DoStatementNode(
+//     $e.node, $s.node, currentScope);}  
 ;
 
 jump_statement returns [PNode node]
@@ -159,8 +162,8 @@ expression returns [PNode node]
   : ^('+' a=expression b=expression) {node = new AddNode($a.node, $b.node);}
   | ^('-' a=expression b=expression) {node = null;}
   | ^('*' a=expression b=expression) {node = new MulNode($a.node, $b.node);}
-  | ^('/' a=expression b=expression) {node = null;}
-  | ^('%' a=expression b=expression) {node = null;}
+  | ^('/' a=expression b=expression) {node = new DivNode($a.node, $b.node);}
+  | ^('%' a=expression b=expression) {node = new RemNode($a.node, $b.node);}
   | ^('=' a=expression b=expression) {node = new AssigmentNode($a.node, $b.node);}
   | ^('<' a=expression b=expression) {node = new CompareNode($a.node, $b.node, "<");}
   | ^('>' a=expression b=expression) {node = new CompareNode($a.node, $b.node, ">");}

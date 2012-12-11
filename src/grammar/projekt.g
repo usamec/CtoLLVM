@@ -209,11 +209,11 @@ statement
 while_iteration  
 	  :  'while'^ '('! expression ')'! statement
 	  ;
-//  
+  
 //do_iteration
-//	  : 'do' statement 'while' '(' expression ')' ';'
+//	  : 'do'^ statement 'while'! '('! expression ')'! ';'!
 //	  ;  	
-//  
+  
 iteration_statement
 //	: for_iteration
 	: while_iteration
