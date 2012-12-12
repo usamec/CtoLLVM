@@ -28,12 +28,19 @@ public class StructDeclarationNode {
       throw new Exception("Structs only allowed in global scope");
     }
 
-    StructType t = new StructType(IdCounter.GetNewStructName());
-    if (!name.equals("")) {
-      if (scope.hasInCurrentScope(name)) {
-        throw new Exception(String.format("Variable %s already declared", name));
+    StructType t;
+    if (name.equals("")) {
+      t = new StructType(IdCounter.GetNewStructName());
+    } else {
+      String structName = "struct "+name;
+      if (scope.hasInCurrentScope(structName)) {
+        t = (StructType) scope.findInScope(structName).type;
+        if (!t.isIncomplete())
+          throw new Exception(String.format("Variable %s already declared", name));
+      } else {
+        t = new StructType(IdCounter.GetNewStructName());
+        scope.addVariable(structName, t);
       }
-      scope.addVariable(t.getCrepr(), t);
     }
 
     List<DeclaredVariable> declaredVariables = 
@@ -59,6 +66,6 @@ public class StructDeclarationNode {
     out.printf("%s = type %s\n", t.getRepresentation(),
                t.getTypeRepresentation());
      
-    return null;
+    return t;
   }
 }

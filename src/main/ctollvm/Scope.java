@@ -128,10 +128,13 @@ public class Scope {
 
   public Variable addVariable(String name, Type type) {
     String newname;
-    if (type.isFunction())
+    if (type.isFunction()) {
       newname = name;
-    else
+    } else if (isGlobal()) {
+      newname = String.format("@%s.%d", name, IdCounter.GetNewId());
+    } else {
       newname = String.format("%%%s.%d", name, IdCounter.GetNewId());
+    }
     Variable v = new Variable(type, newname);
     variables.put(name, v);
     return v;

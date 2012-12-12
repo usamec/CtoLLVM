@@ -52,9 +52,9 @@ public class DeclarationProcessor {
       return;
     }
 
-    if (scope.isGlobal()) {
+/*    if (scope.isGlobal()) {
       throw new Exception("Global variables not allowed yet");
-    }
+    }*/
 
     if (scope.hasInCurrentScope(name)) {
       throw new Exception(String.format("Variable %s already declared", name));
@@ -63,6 +63,10 @@ public class DeclarationProcessor {
       throw new Exception(String.format("Variable cannot have void type"));
     }
     Scope.Variable v = scope.addVariable(name, type);
-    out.println(String.format("%s = alloca %s", v.name, v.type.getRepresentation()));
+    if (scope.isGlobal()) {
+      out.println(String.format("%s = global %s undef", v.name, v.type.getRepresentation()));
+    } else {
+      out.println(String.format("%s = alloca %s", v.name, v.type.getRepresentation()));
+    }
   }
 }
