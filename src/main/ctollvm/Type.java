@@ -13,4 +13,5 @@ public interface Type {
   public boolean isBool();
   public boolean isArray(); 
   public boolean isTypedef(); 
+  public boolean isIncomplete();
 }

@@ -19,6 +19,9 @@ public class ArrayDeclarationProcessor extends DeclarationProcessor {
     if (type.isFunction()) {
       throw new Exception("Array of functions is forbidden");
     }
+    if (type.isIncomplete() || type.isVoid()) {
+      throw new Exception("Array of incomplete type or void is forbidden");
+    }
 
     // Vyrobime si dummy outputstream - vysledok tohoto ma byt konstanta
     ByteArrayOutputStream baos = new ByteArrayOutputStream();

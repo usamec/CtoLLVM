@@ -57,4 +57,8 @@ public class TypedefType implements Type {
   public boolean isTypedef() {
     return true;
   }
+
+  public boolean isIncomplete() {
+    return false;
+  }
 }

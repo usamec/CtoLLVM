@@ -59,4 +59,8 @@ public class ArrayType implements Type, PointingType {
   public boolean isTypedef() {
     return false;
   }
+
+  public boolean isIncomplete() {
+    return false;
+  }
 }

@@ -105,4 +105,8 @@ public class FunctionType implements Type {
     return false;
   }
 
+  public boolean isIncomplete() {
+    return false;
+  }
+
 }

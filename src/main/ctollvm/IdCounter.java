@@ -13,4 +13,8 @@ public class IdCounter {
   public static String GetNewLabel() {
     return String.format("label%d", GetNewId());
   }
+
+  public static String GetNewStructName() {
+    return String.format("struct.%d", GetNewId());
+  }
 }

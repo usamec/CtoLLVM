@@ -364,7 +364,7 @@ struct_declaration_list
 //
 struct_declaration
 	: specifier_qualifier_list struct_declarator_list ';'
-         -> ^(STRUCTDECITEM specifier_qualifier_list struct_declarator_list) 
+         -> ^(DEC specifier_qualifier_list struct_declarator_list) 
 	;
 //	
 specifier_qualifier_list

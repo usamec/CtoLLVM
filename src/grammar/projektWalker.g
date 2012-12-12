@@ -105,7 +105,18 @@ jump_statement returns [PNode node]
   | 'continue' {node = new ContinueStatementNode(currentScope);}
 ;
 
-declaration returns [PNode node]
+struct_or_union_specifier returns [StructDeclarationNode node]
+@init {
+  StructDeclarationNode sd = new StructDeclarationNode(currentScope);
+  node = sd;
+}
+  : ^(STRUCTDEC 
+      (id=Identifier {sd.setName($id.text);})?
+      (declaration {sd.addDeclaration($declaration.node);})+
+     )
+;
+
+declaration returns [DeclarationNode node]
 @init {
   DeclarationNode dn = new DeclarationNode(currentScope);
   node = dn;
@@ -118,7 +129,9 @@ declaration returns [PNode node]
       'auto' {dn.setStorageSpecifier("auto");} |
       'register' {dn.setStorageSpecifier("register");} |
       t=Type_specifier {dn.addTypeSpecifier($t.text);} |
-      i=Identifier {dn.setTypedef($i.text);} )*
+      i=Identifier {dn.setTypedef($i.text);} | 
+      s=struct_or_union_specifier {dn.setStruct($s.node);}
+      )*
       (d=declarator {dn.addDeclarationProcessor($d.node);} )*)
 ;
 

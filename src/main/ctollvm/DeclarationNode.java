@@ -11,6 +11,7 @@ public class DeclarationNode implements PNode {
   private List<String> typeSpecifiers;
   private String typedef;
   private boolean moreStorageSpecifiers;
+  private StructDeclarationNode structDeclaration;
 
   public DeclarationNode(Scope scope) {
     this.declarators = new ArrayList<DeclarationProcessor>();
@@ -18,6 +19,12 @@ public class DeclarationNode implements PNode {
     this.storageSpecifier = "";
     this.typeSpecifiers = new ArrayList<String>();
     this.moreStorageSpecifiers = false;
+    this.structDeclaration = null;
+    this.typedef = "";
+  }
+
+  public void setStruct(StructDeclarationNode structDeclaration) {
+    this.structDeclaration = structDeclaration;
   }
 
   public void addDeclarationProcessor(DeclarationProcessor node) {
@@ -39,12 +46,18 @@ public class DeclarationNode implements PNode {
     typeSpecifiers.add(typeSpecifier);
   }
 
-  @Override
-  public EvalResult produceOutput(PrintStream out) throws Exception {
-    if (moreStorageSpecifiers) {
-      throw new Exception("Declaration can have at most one storage specifier");
+  public List<DeclaredVariable> getDeclaredVariables(PrintStream out) throws Exception {
+    Type t = getDeclarationType(out);
+    List<DeclaredVariable> retVal = new ArrayList<DeclaredVariable>();
+    for (DeclarationProcessor n : declarators) {
+      Type td = n.processTypeAll(t);
+      String name = n.getName();
+      retVal.add(new DeclaredVariable(td, name));
     }
+    return retVal;
+  }
 
+  public Type getDeclarationType(PrintStream out) throws Exception {
     TypeSystem typeSystem = TypeSystem.getInstance();
     Type t = null;
     if (typeSpecifiers.size() > 0) {
@@ -63,11 +76,23 @@ public class DeclarationNode implements PNode {
       }
       TypedefType tt = (TypedefType) v.type;
       t = tt.getTypeTo();
+    } else if (structDeclaration != null) {
+      t = structDeclaration.processDeclaration(out);
     }
+    return t;  
+  }
+
+  @Override
+  public EvalResult produceOutput(PrintStream out) throws Exception {
+    if (moreStorageSpecifiers) {
+      throw new Exception("Declaration can have at most one storage specifier");
+    }
+
+    Type t = getDeclarationType(out);
 
     if (storageSpecifier == "typedef") {
       for (DeclarationProcessor n : declarators) {
-        Type td = typeSystem.getTypedefTo(n.processTypeAll(t));
+        Type td = TypeSystem.getInstance().getTypedefTo(n.processTypeAll(t));
         String name = n.getName();
 
         if (scope.hasInCurrentScope(name)) {

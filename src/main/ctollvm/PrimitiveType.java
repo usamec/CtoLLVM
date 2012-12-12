@@ -68,4 +68,8 @@ public class PrimitiveType implements Type {
   public boolean isTypedef() {
     return false;
   }
+
+  public boolean isIncomplete() {
+    return false;
+  }
 }
