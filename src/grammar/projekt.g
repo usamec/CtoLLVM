@@ -306,18 +306,17 @@ direct_declarator
 // Ideme tu spravit enforcement na to, aby kazdy declaration_specifiers mal aspon jeden
 // type_specifier
 
-declaration_specifiers_before
+declaration_specifiers_bonus
   : (storage_class_specifier | Type_qualifier! )*
 ;
 
-declaration_specifiers_after
+declaration_specifiers_all
   : (storage_class_specifier | Type_qualifier! | type_specifier_after)*
 ;
 
 // Tu narvar struct a enum
-type_specifier
-  : Type_specifier
-  | Identifier
+comp_type_specifier
+  : Identifier
   | struct_or_union_specifier
 ;
 
@@ -326,7 +325,9 @@ type_specifier_after
 ;
 
 declaration_specifiers
-	: declaration_specifiers_before type_specifier declaration_specifiers_after
+	: declaration_specifiers_bonus (
+          (comp_type_specifier declaration_specifiers_bonus) |
+          (Type_specifier declaration_specifiers_all))
 ;
 
 //
@@ -367,7 +368,10 @@ struct_declaration
 	;
 //	
 specifier_qualifier_list
-	: (Type_qualifier!)* type_specifier (Type_qualifier! | Type_specifier)*
+	: (Type_qualifier!)* (
+          (Type_specifier (Type_qualifier! | Type_specifier)*) |
+          (comp_type_specifier (Type_qualifier!)*)
+          )
 	;
 //
 struct_declarator_list
