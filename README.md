@@ -34,7 +34,7 @@ Easy TODO:
 Hard TODO:
 - - pre pointre
 - vsetky mozne dalsie typy (struktury, typedefs, ...)
-- poriadne argumenty funkcii
+- poriadne argumenty funkcii (povolit [], argumenty bez nazvy v deklaracii)
 
 Ked uz nebude co robit TODO:
 - vyhodnocovanie konstatnych vyrazov
