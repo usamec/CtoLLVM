@@ -22,7 +22,8 @@ tokens {
   EMPTYSTAT;
   ARRAYDEC;
   POINTER;
-  STORAGE_SPECIFIER;
+  STRUCTDEC;
+  STRUCTDECITEM;
 }
 
 @parser::header {
@@ -317,6 +318,7 @@ declaration_specifiers_after
 type_specifier
   : Type_specifier
   | Identifier
+  | struct_or_union_specifier
 ;
 
 type_specifier_after
@@ -344,36 +346,38 @@ storage_class_specifier
 	| 'register')
 	;
 //
-//struct_or_union_specifier
-//	: struct_or_union Identifier ? '{' struct_declaration_list '}'
+struct_or_union_specifier
+	: struct_or_union Identifier ? '{' struct_declaration_list '}' ->
+          ^(STRUCTDEC Identifier? struct_declaration_list)
 //	| struct_or_union Identifier
-//	;
+	;
+
+struct_or_union
+	: 'struct'
+	| 'union'
+	;
 //
-//struct_or_union
-//	: 'struct'
-//	| 'union'
-//	;
+struct_declaration_list
+	: (struct_declaration)+
+	;
 //
-//struct_declaration_list
-//	:(struct_declaration) (struct_declaration)*
-//	;
-//
-//struct_declaration
-//	: specifier_qualifier_list struct_declarator_list ';'
-//	;
+struct_declaration
+	: specifier_qualifier_list struct_declarator_list ';'
+         -> ^(STRUCTDECITEM specifier_qualifier_list struct_declarator_list) 
+	;
 //	
-//specifier_qualifier_list
-//	: (Type_specifier | Type_qualifier) specifier_qualifier_list ?
-//	;
+specifier_qualifier_list
+	: (Type_qualifier!)* type_specifier (Type_qualifier! | Type_specifier)*
+	;
 //
-//struct_declarator_list
-//	: ( struct_declarator_list ',') ? struct_declarator
-//	;
+struct_declarator_list
+	:  struct_declarator ( ','! struct_declarator_list ) ?
+	;
 //
-//struct_declarator
-//	: declarator
-//	| declarator ? ':' constant_expression
-//	;
+struct_declarator
+	: declarator -> ^(IDEC declarator)
+//	| declarator ? ':'! constant_expression!
+	;
 //
 //enum_specifier
 //	: 'enum' Identifier ? '{' enumerator_list (',' enumerator_list)* '}'
