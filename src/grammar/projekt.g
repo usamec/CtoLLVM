@@ -306,11 +306,11 @@ direct_declarator
 // type_specifier
 
 declaration_specifiers_before
-  : (storage_class_specifier | Type_qualifier)*
+  : (storage_class_specifier | Type_qualifier! )*
 ;
 
 declaration_specifiers_after
-  : (storage_class_specifier | Type_qualifier | type_specifier_after)*
+  : (storage_class_specifier | Type_qualifier! | type_specifier_after)*
 ;
 
 // Tu narvar struct a enum

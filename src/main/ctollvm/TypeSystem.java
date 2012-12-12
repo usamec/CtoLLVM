@@ -15,6 +15,8 @@ public class TypeSystem {
 
   public void ResetTypes() {
     mapping = new HashMap<String, Type>();
+    /* PrimitiveType(repr, integral, double, size, signed, crepr, isVoid, isBool) */
+    // Viacslovne nazvy su usortene podla abecedy
     mapping.put("int", new PrimitiveType("i32", true, false, 4, true, "int", false, false));
     mapping.put("double",
         new PrimitiveType("double", false, true, 8, true, "double", false, false));
@@ -32,6 +34,26 @@ public class TypeSystem {
     if (instance == null)
       instance = new TypeSystem();
     return instance;
+  }
+
+  public String typeSpecifiersToString(List<String> typeSpecifiers) {
+    java.util.Collections.sort(typeSpecifiers);
+    StringBuffer buf = new StringBuffer();
+    boolean first = true;
+    for (String s : typeSpecifiers) {
+      if (!first) buf.append(" ");
+      first = false;
+      buf.append(s);
+    }
+    return buf.toString();
+  }
+
+  public boolean isValidType(List<String> typeSpecifiers) {
+    return isValidType(typeSpecifiersToString(typeSpecifiers));
+  }
+
+  public Type getType(List<String> typeSpecifiers) {
+    return getType(typeSpecifiersToString(typeSpecifiers));
   }
 
   public boolean isValidType(String type) {

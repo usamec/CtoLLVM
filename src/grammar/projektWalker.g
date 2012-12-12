@@ -101,7 +101,15 @@ declaration returns [PNode node]
   DeclarationNode dn = new DeclarationNode(currentScope);
   node = dn;
 }
-  : ^(DEC t=Type_specifier {dn.setType($t.text);}
+  : ^(DEC
+      (
+      'typedef' {dn.setStorageSpecifier("typedef");} |
+      'extern' {dn.setStorageSpecifier("extern");} |
+      'static' {dn.setStorageSpecifier("static");} |
+      'auto' {dn.setStorageSpecifier("auto");} |
+      'register' {dn.setStorageSpecifier("register");} |
+      t=Type_specifier {dn.addTypeSpecifier($t.text);} |
+      i=Identifier {dn.setTypedef($i.text);} )*
       (d=declarator {dn.addDeclarationProcessor($d.node);} )*)
 ;
 
