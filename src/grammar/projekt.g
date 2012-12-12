@@ -23,7 +23,7 @@ tokens {
   ARRAYDEC;
   POINTER;
   STRUCTDEC;
-  STRUCTDECITEM;
+  STRUCTUSE;
 }
 
 @parser::header {
@@ -350,7 +350,7 @@ storage_class_specifier
 struct_or_union_specifier
 	: struct_or_union Identifier ? '{' struct_declaration_list '}' ->
           ^(STRUCTDEC Identifier? struct_declaration_list)
-//	| struct_or_union Identifier
+	| struct_or_union Identifier -> ^(STRUCTUSE Identifier)
 	;
 
 struct_or_union

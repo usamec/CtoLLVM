@@ -113,7 +113,9 @@ struct_or_union_specifier returns [StructDeclarationNode node]
   : ^(STRUCTDEC 
       (id=Identifier {sd.setName($id.text);})?
       (declaration {sd.addDeclaration($declaration.node);})+
-     )
+     ) |
+    ^(STRUCTUSE
+      (id=Identifier {sd.setName($id.text); sd.setUse();}))
 ;
 
 declaration returns [DeclarationNode node]

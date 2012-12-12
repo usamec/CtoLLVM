@@ -8,6 +8,7 @@ public class StructDeclarationNode {
   Scope scope;
   String name;
   List<DeclarationNode> declarations;
+  boolean use = false;
 
   public StructDeclarationNode(Scope scope) {
     this.scope = scope;
@@ -19,11 +20,29 @@ public class StructDeclarationNode {
     this.name = name;
   }
 
+  public void setUse() {
+    use = true;
+  }
+
   public void addDeclaration(DeclarationNode node) {
     declarations.add(node);
   }
 
+  public Type processUse() {
+    String structName = "struct "+name;
+    if (scope.hasInScope(structName)) {
+      return scope.findInScope(structName).type;
+    } else {
+      Type t = new StructType(IdCounter.GetNewStructName());
+      scope.addVariable(structName, t);
+      return t;
+    }
+  }
+
   public Type processDeclaration(PrintStream out) throws Exception {
+    if (use) {
+      return processUse();
+    }
     if (!scope.isGlobal()) {
       throw new Exception("Structs only allowed in global scope");
     }
@@ -34,7 +53,7 @@ public class StructDeclarationNode {
     } else {
       String structName = "struct "+name;
       if (scope.hasInCurrentScope(structName)) {
-        t = (StructType) scope.findInScope(structName).type;
+        t = (StructType) scope.findInCurrentScope(structName).type;
         if (!t.isIncomplete())
           throw new Exception(String.format("Variable %s already declared", name));
       } else {
