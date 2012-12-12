@@ -16,17 +16,52 @@ public class TypeSystem {
   public void ResetTypes() {
     mapping = new HashMap<String, Type>();
     /* PrimitiveType(repr, integral, double, size, signed, crepr, isVoid, isBool) */
-    // Viacslovne nazvy su usortene podla abecedy
-    mapping.put("int", new PrimitiveType("i32", true, false, 4, true, "int", false, false));
-    mapping.put("double",
-        new PrimitiveType("double", false, true, 8, true, "double", false, false));
-    mapping.put("long", mapping.get("int"));
-    mapping.put("short", new PrimitiveType("i16", true, false, 2, true, "int", false, false));
-    mapping.put("float",
-        new PrimitiveType("float", false, true, 4, true, "float", false, false));
+    // Viacslovne nazvy su usortene podla abecedy opacne
+
     // LLVM nemoze mat pointre na void, tak sa interne urobia ako i8
     mapping.put("void", new PrimitiveType("i8", false, false, 0, false, "void", true, false)); 
     mapping.put("char", new PrimitiveType("i8", true, false, 1, true, "char", false, false));
+    mapping.put("signed char", mapping.get("char"));
+    mapping.put("unsigned char",
+                new PrimitiveType("i8", true, false, 1, false, "unsigned char", false, false));
+
+    mapping.put("short", new PrimitiveType("i16", true, false, 2, true, "short", false, false));
+    mapping.put("signed short", mapping.get("short"));
+    mapping.put("short int", mapping.get("short"));
+    mapping.put("signed short int", mapping.get("short"));
+
+    mapping.put("unsigned short", new PrimitiveType("i16", true, false, 2, false, "unsigned short", false, false));
+    mapping.put("unsigned short int", mapping.get("unsigned short"));
+
+    mapping.put("int", new PrimitiveType("i32", true, false, 4, true, "int", false, false));
+    mapping.put("signed", mapping.get("int"));
+    mapping.put("signed int", mapping.get("int"));
+
+    mapping.put("unsigned int", new PrimitiveType("i32", true, false, 4, false, "unsigned int", false, false));
+    mapping.put("unsigned", mapping.get("unsigned int"));
+
+    mapping.put("long", mapping.get("int"));
+    mapping.put("signed long", mapping.get("int"));
+    mapping.put("long int", mapping.get("int"));
+    mapping.put("signed long int", mapping.get("int"));
+
+    mapping.put("unsigned long", mapping.get("unsigned int"));
+    mapping.put("unsigned long int", mapping.get("unsigned int"));
+
+    mapping.put("long long", new PrimitiveType("i64", true, false, 8, true, "long long", false, false));
+    mapping.put("signed long long", mapping.get("long long"));
+    mapping.put("long long int", mapping.get("long long"));
+    mapping.put("signed long long int", mapping.get("long long"));
+
+    mapping.put("unsigned long long", new PrimitiveType("i64", true, false, 8, false, "unsigned long long", false, false));
+    mapping.put("unsigned long long int", mapping.get("unsigned long long"));
+
+    mapping.put("long double",
+        new PrimitiveType("fp128", false, true, 16, true, "long double", false, false));
+    mapping.put("double",
+        new PrimitiveType("double", false, true, 8, true, "double", false, false));
+    mapping.put("float",
+        new PrimitiveType("float", false, true, 4, true, "float", false, false));
     mapping.put("_Bool", new PrimitiveType("i1", true, false, 1, false, "_Bool", false, true));
   }
 
@@ -38,6 +73,7 @@ public class TypeSystem {
 
   public String typeSpecifiersToString(List<String> typeSpecifiers) {
     java.util.Collections.sort(typeSpecifiers);
+    java.util.Collections.reverse(typeSpecifiers);
     StringBuffer buf = new StringBuffer();
     boolean first = true;
     for (String s : typeSpecifiers) {
