@@ -236,7 +236,7 @@ block_item_list
 	;
 
 block_item
-	: (Identifier ';') => statement
+	: statement
 	| declaration
 	;
 //
