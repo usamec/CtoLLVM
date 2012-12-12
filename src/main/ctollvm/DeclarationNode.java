@@ -44,6 +44,7 @@ public class DeclarationNode implements PNode {
     if (moreStorageSpecifiers) {
       throw new Exception("Declaration can have at most one storage specifier");
     }
+
     TypeSystem typeSystem = TypeSystem.getInstance();
     Type t = null;
     if (typeSpecifiers.size() > 0) {
@@ -52,9 +53,34 @@ public class DeclarationNode implements PNode {
       }
     
       t = typeSystem.getType(typeSpecifiers);
+    } else if (!typedef.equals("")) {
+      Scope.Variable v = scope.findInScope(typedef);
+      if (v == null) {
+        throw new Exception("Unknown identifier");
+      }
+      if (!v.type.isTypedef()) {
+        throw new Exception(String.format("%s is not type", typedef));
+      }
+      TypedefType tt = (TypedefType) v.type;
+      t = tt.getTypeTo();
     }
-    for (DeclarationProcessor n : declarators) {
-      n.produceOutput(t, scope, out);
+
+    if (storageSpecifier == "typedef") {
+      for (DeclarationProcessor n : declarators) {
+        Type td = typeSystem.getTypedefTo(n.processTypeAll(t));
+        String name = n.getName();
+
+        if (scope.hasInCurrentScope(name)) {
+          throw new Exception(String.format("Variable %s already declared", name));
+        }
+
+        Scope.Variable v = scope.addVariable(name, td);
+      }
+      return null;
+    } else {
+      for (DeclarationProcessor n : declarators) {
+        n.produceOutput(t, scope, out);
+      }
     }
     return null;
   }

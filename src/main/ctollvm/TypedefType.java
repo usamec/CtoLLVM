@@ -1,21 +1,21 @@
 package ctollvm;
-public class PointerType implements Type, PointingType {
-  Type pointerTo;
+public class TypedefType implements Type {
+  Type typeTo;
 
-  public Type getPointerTo() {
-    return pointerTo;
+  public Type getTypeTo() {
+    return typeTo;
   }
 
-  public PointerType(Type pointerTo) {
-    this.pointerTo = pointerTo;
+  public TypedefType(Type typeTo) {
+    this.typeTo = typeTo;
   }
 
   public String getRepresentation() {
-    return pointerTo.getRepresentation() + "*";
+    return "";
   }
 
   public String getCrepr() {
-    return pointerTo.getCrepr() + "*";
+    return "typedef " + typeTo.getCrepr();
   }
 
   public boolean isIntegral() {
@@ -31,11 +31,11 @@ public class PointerType implements Type, PointingType {
   }
   
   public int sizeof() {
-    return 8;
+    return 0;
   }
 
   public boolean isPointer() {
-    return true;
+    return false;
   }
 
   public boolean isVoid() {
@@ -55,6 +55,6 @@ public class PointerType implements Type, PointingType {
   }
 
   public boolean isTypedef() {
-    return false;
+    return true;
   }
 }

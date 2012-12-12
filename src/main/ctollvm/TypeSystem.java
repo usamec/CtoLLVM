@@ -160,6 +160,16 @@ public class TypeSystem {
     return tp;
   }
 
+  public Type getTypedefTo(Type type) {
+    String typestring = "typedef " + type.getCrepr();
+    if (mapping.containsKey(typestring)) {
+      return mapping.get(typestring);
+    }
+    Type tp = new TypedefType(type);
+    mapping.put(typestring, tp);
+    return tp; 
+  }
+
   public Type dereference(Type type) {
     PointingType pt = (PointingType) type;
     return pt.getPointerTo();

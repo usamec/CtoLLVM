@@ -100,4 +100,9 @@ public class FunctionType implements Type {
   public boolean isArray() {
     return false;
   }
+
+  public boolean isTypedef() {
+    return false;
+  }
+
 }

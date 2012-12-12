@@ -235,7 +235,7 @@ block_item_list
 	: block_item* -> ^(BLI block_item*)
 	;
 
-block_item
+block_item options {backtrack=true;}
 	: statement
 	| declaration
 	;

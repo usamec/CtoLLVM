@@ -55,4 +55,8 @@ public class ArrayType implements Type, PointingType {
   public boolean isArray() {
     return true;
   }
+
+  public boolean isTypedef() {
+    return false;
+  }
 }

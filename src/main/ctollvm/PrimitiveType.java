@@ -64,4 +64,8 @@ public class PrimitiveType implements Type {
   public boolean isArray() {
     return false;
   }
+
+  public boolean isTypedef() {
+    return false;
+  }
 }

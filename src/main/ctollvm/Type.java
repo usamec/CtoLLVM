@@ -12,4 +12,5 @@ public interface Type {
   public boolean isFunction();
   public boolean isBool();
   public boolean isArray(); 
+  public boolean isTypedef(); 
 }
