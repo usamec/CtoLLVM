@@ -51,10 +51,19 @@ compound_statement returns [PNode node]
 
 parameter_declaration returns [FunctionParameterNode node]
 @init {
-  FunctionParameterNode fn = new FunctionParameterNode();
+  FunctionParameterNode fn = new FunctionParameterNode(currentScope);
   node = fn;
 }
-  : ^(PDEC t=Type_specifier {fn.setType($t.text);}
+  : ^(PDEC
+      (
+      'typedef' {fn.setStorageSpecifier("typedef");} |
+      'extern' {fn.setStorageSpecifier("extern");} |
+      'static' {fn.setStorageSpecifier("static");} |
+      'auto' {fn.setStorageSpecifier("auto");} |
+      'register' {fn.setStorageSpecifier("register");} |
+      t=Type_specifier {fn.addTypeSpecifier($t.text);} |
+      i=Identifier {fn.setTypedef($i.text);} 
+      )*
       d=declarator {fn.setDeclaration($d.node);})
 ;
 

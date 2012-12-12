@@ -175,7 +175,7 @@ parameter_list
 
 // TODO: fixnut na spravny tvar
 parameter_declaration
-	: Type_specifier declarator -> ^(PDEC Type_specifier ^(IDEC declarator))
+	: declaration_specifiers declarator -> ^(PDEC declaration_specifiers ^(IDEC declarator))
 //	| declaration_specifiers abstract_declarator ?
 	;
 
