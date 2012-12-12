@@ -183,8 +183,8 @@ parameter_declaration
 	;
 
 function_definition
-        : Type_specifier declarator '{' block_item_list '}'
-        -> ^(FUNCDEF Type_specifier declarator block_item_list)
+        : declaration_specifiers declarator '{' block_item_list '}'
+        -> ^(FUNCDEF declaration_specifiers declarator block_item_list)
 //	: declaration_specifiers declarator declaration_list ? compound_statement
 	;
 //	

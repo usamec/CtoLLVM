@@ -5,26 +5,49 @@ import java.lang.StringBuffer;
 import java.util.*;
 
 public class FunctionDefinitionNode implements PNode {
-  private String type;
   private String name;
   private Scope scope;
   private PNode bli;
   private List<FunctionParameterNode> parameters;
   private DeclarationProcessor declaration;
+  private List<String> typeSpecifiers;
+  private String typedef;
+  private boolean moreStorageSpecifiers;
+  private StructDeclarationNode structDeclaration;
+  private String storageSpecifier;
 
   public FunctionDefinitionNode(Scope scope) {
     this.scope = scope;
-    this.type = "";
     this.name = "";
     parameters = new ArrayList<FunctionParameterNode>();
+    this.storageSpecifier = "";
+    this.typeSpecifiers = new ArrayList<String>();
+    this.moreStorageSpecifiers = false;
+    this.structDeclaration = null;
+    this.typedef = "";
+  }
+
+  public void setStruct(StructDeclarationNode structDeclaration) {
+    this.structDeclaration = structDeclaration;
+  }
+
+  public void setTypedef(String typedef) {
+    this.typedef = typedef;
+  }
+
+  public void setStorageSpecifier(String storageSpecifier) {
+    if (!this.storageSpecifier.equals("")) {
+      moreStorageSpecifiers = true;
+    }
+    this.storageSpecifier = storageSpecifier;
+  }
+
+  public void addTypeSpecifier(String typeSpecifier) {
+    typeSpecifiers.add(typeSpecifier);
   }
 
   public void setFunctionDeclaration(DeclarationProcessor dec) {
     declaration = dec;
-  }
-
-  public void setType(String type) {
-    this.type = type;
   }
 
   public void setBli(PNode bli) {
@@ -37,11 +60,33 @@ public class FunctionDefinitionNode implements PNode {
     if (!scope.parent().isGlobal()) {
       throw new Exception("Function cannot be defined in local scope");
     }
-    TypeSystem typeSystem = TypeSystem.getInstance();
+/*    TypeSystem typeSystem = TypeSystem.getInstance();
     if (!typeSystem.isValidType(type)) {
       throw new Exception(String.format("Invalid type %s", type));
     }    
-    Type t = typeSystem.getType(type);
+    Type t = typeSystem.getType(type);*/
+    TypeSystem typeSystem = TypeSystem.getInstance();
+    Type t = null;
+    if (typeSpecifiers.size() > 0) {
+      if (!typeSystem.isValidType(typeSpecifiers)) {
+        throw new Exception(String.format("Invalid type"));
+      }
+    
+      t = typeSystem.getType(typeSpecifiers);
+    } else if (!typedef.equals("")) {
+      Scope.Variable v = scope.findInScope(typedef);
+      if (v == null) {
+        throw new Exception("Unknown identifier");
+      }
+      if (!v.type.isTypedef()) {
+        throw new Exception(String.format("%s is not type", typedef));
+      }
+      TypedefType tt = (TypedefType) v.type;
+      t = tt.getTypeTo();
+    } else if (structDeclaration != null) {
+      t = structDeclaration.processDeclaration(out);
+    }
+
     Type fT = declaration.processTypeAll(t);
     if (!fT.isFunction()) {
       throw new Exception("Bad function definition");

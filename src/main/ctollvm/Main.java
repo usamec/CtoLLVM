@@ -21,7 +21,7 @@ public class Main {
     CommonTree tree = (CommonTree)parser.parse().getTree();
     DOTTreeGenerator gen = new DOTTreeGenerator();
     StringTemplate st = gen.toDOT(tree);
-    System.out.println(st);
+//    System.out.println(st);
     CommonTreeNodeStream nodes = new CommonTreeNodeStream(tree);
     projektWalker walker = new projektWalker(nodes);
     PNode node = walker.walk();

@@ -32,9 +32,21 @@ function_definition returns [PNode node]
 @after {
   currentScope = currentScope.parent();
 }
-  : ^(FUNCDEF t=Type_specifier {fn.setType($t.text);}
-    (fd=dec_node {fn.setFunctionDeclaration($fd.node);})
-     b=block_item_list {fn.setBli($b.node);}
+  : ^(FUNCDEF //t=Type_specifier {fn.setType($t.text);}
+     (
+      'typedef' {fn.setStorageSpecifier("typedef");} |
+      'extern' {fn.setStorageSpecifier("extern");} |
+      'static' {fn.setStorageSpecifier("static");} |
+      'auto' {fn.setStorageSpecifier("auto");} |
+      'register' {fn.setStorageSpecifier("register");} |
+      t=Type_specifier {fn.addTypeSpecifier($t.text);} |
+      i=Identifier {fn.setTypedef($i.text);} |
+      s=struct_or_union_specifier {fn.setStruct($s.node);} |
+      su=struct_or_union_user {fn.setStruct($su.node);}
+      )*
+
+     (fd=dec_node {fn.setFunctionDeclaration($fd.node);})
+      b=block_item_list {fn.setBli($b.node);}
    )
 ;
 
@@ -62,7 +74,8 @@ parameter_declaration returns [FunctionParameterNode node]
       'auto' {fn.setStorageSpecifier("auto");} |
       'register' {fn.setStorageSpecifier("register");} |
       t=Type_specifier {fn.addTypeSpecifier($t.text);} |
-      i=Identifier {fn.setTypedef($i.text);} 
+      i=Identifier {fn.setTypedef($i.text);} |
+      s=struct_or_union_user {fn.setStruct($s.node);}
       )*
       d=declarator {fn.setDeclaration($d.node);})
 ;
@@ -113,8 +126,15 @@ struct_or_union_specifier returns [StructDeclarationNode node]
   : ^(STRUCTDEC 
       (id=Identifier {sd.setName($id.text);})?
       (declaration {sd.addDeclaration($declaration.node);})+
-     ) |
-    ^(STRUCTUSE
+     ) 
+;
+
+struct_or_union_user returns [StructDeclarationNode node]
+@init {
+  StructDeclarationNode sd = new StructDeclarationNode(currentScope);
+  node = sd;
+}
+  : ^(STRUCTUSE
       (id=Identifier {sd.setName($id.text); sd.setUse();}))
 ;
 
@@ -132,7 +152,8 @@ declaration returns [DeclarationNode node]
       'register' {dn.setStorageSpecifier("register");} |
       t=Type_specifier {dn.addTypeSpecifier($t.text);} |
       i=Identifier {dn.setTypedef($i.text);} | 
-      s=struct_or_union_specifier {dn.setStruct($s.node);}
+      s=struct_or_union_specifier {dn.setStruct($s.node);} |
+      s=struct_or_union_user {dn.setStruct($s.node);}
       )*
       (d=declarator {dn.addDeclarationProcessor($d.node);} )*)
 ;

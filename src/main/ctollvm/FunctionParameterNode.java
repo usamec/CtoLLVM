@@ -6,16 +6,22 @@ import java.util.*;
 
 public class FunctionParameterNode {
   private DeclarationProcessor declaration = null;
-  private String type;
   private Scope scope;
   private List<String> typeSpecifiers;
   private String typedef;
   private boolean moreStorageSpecifiers;
+  private StructDeclarationNode structDeclaration;
 
   public FunctionParameterNode(Scope scope) {
     this.scope = scope;
     this.typeSpecifiers = new ArrayList<String>();
     this.moreStorageSpecifiers = false;
+    this.structDeclaration = null;
+    this.typedef = "";
+  }
+
+  public void setStruct(StructDeclarationNode structDeclaration) {
+    this.structDeclaration = structDeclaration;
   }
 
   public void setDeclaration(DeclarationProcessor dec) {
@@ -56,7 +62,9 @@ public class FunctionParameterNode {
       }
       TypedefType tt = (TypedefType) v.type;
       t = tt.getTypeTo();
-    }
+    } else if (structDeclaration != null) {
+      t = structDeclaration.processDeclaration(null);
+    } 
     // TODO: ak je typ array, tak zmenit na pointer
     return declaration.processTypeAll(t);
   }
