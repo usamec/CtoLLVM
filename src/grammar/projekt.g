@@ -22,6 +22,7 @@ tokens {
   EMPTYSTAT;
   ARRAYDEC;
   POINTER;
+  STORAGE_SPECIFIER;
 }
 
 @parser::header {
@@ -235,8 +236,8 @@ block_item_list
 	;
 
 block_item
-	: declaration
-	| statement
+	: (Identifier ';') => statement
+	| declaration
 	;
 //
 expression_statement
@@ -264,8 +265,8 @@ jump_statement
 
 declaration
 // TODO: miesto Type_specifier tu dat poriadne declaration_specifiers
-  : Type_specifier init_declarator? (',' init_declarator)* ';' -> 
-      ^(DEC Type_specifier init_declarator*)
+  : declaration_specifiers (init_declarator (',' init_declarator)*)? ';' -> 
+      ^(DEC declaration_specifiers init_declarator*)
 ;
 
 declarator
@@ -300,12 +301,32 @@ direct_declarator
 //	: declaration_specifiers init_declarator_list ? ';'
 //	;
 //
-//declaration_specifiers
-//	: storage_class_specifier declaration_specifiers ?
-//	| Type_specifier declaration_specifiers ?
-//	| Type_qualifier declaration_specifiers ?
-//	| function_specifier declaration_specifiers ?
-//	;
+
+// Ideme tu spravit enforcement na to, aby kazdy declaration_specifiers mal aspon jeden
+// type_specifier
+
+declaration_specifiers_before
+  : (storage_class_specifier | Type_qualifier)*
+;
+
+declaration_specifiers_after
+  : (storage_class_specifier | Type_qualifier | type_specifier_after)*
+;
+
+// Tu narvar struct a enum
+type_specifier
+  : Type_specifier
+  | Identifier
+;
+
+type_specifier_after
+  : Type_specifier
+;
+
+declaration_specifiers
+	: declaration_specifiers_before type_specifier declaration_specifiers_after
+;
+
 //
 //init_declarator_list
 //	: ( init_declarator_list ',') ? init_declarator
@@ -315,13 +336,13 @@ init_declarator
 	: declarator -> ^(IDEC declarator) //( '=' initializer ) ?
 	;
 //
-//storage_class_specifier
-//	: 'typedef' 
-//	| 'extern' 
-//	| 'static' 
-//	| 'auto' 
-//	| 'register'
-//	;
+storage_class_specifier
+	: ('typedef'
+	| 'extern' 
+	| 'static' 
+	| 'auto' 
+	| 'register')
+	;
 //
 //struct_or_union_specifier
 //	: struct_or_union Identifier ? '{' struct_declaration_list '}'

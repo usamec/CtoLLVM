@@ -8,11 +8,15 @@ public class DeclarationNode implements PNode {
   private String type;
   private List<DeclarationProcessor> declarators = null;
   private Scope scope;
+  private String storageSpecifier;
+  private List<String> typeSpecifiers;
 
   public DeclarationNode(Scope scope) {
     this.type = "";
     this.declarators = new ArrayList<DeclarationProcessor>();
     this.scope = scope;
+    this.storageSpecifier = "";
+    this.typeSpecifiers = new ArrayList<String>();
   }
 
   public void setType(String type) {

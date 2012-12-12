@@ -22,12 +22,12 @@ public class Main {
     DOTTreeGenerator gen = new DOTTreeGenerator();
     StringTemplate st = gen.toDOT(tree);
     System.out.println(st);
-    CommonTreeNodeStream nodes = new CommonTreeNodeStream(tree);
+/*    CommonTreeNodeStream nodes = new CommonTreeNodeStream(tree);
     projektWalker walker = new projektWalker(nodes);
     PNode node = walker.walk();
     PrintStream output = new PrintStream(new FileOutputStream("test.ll"));
     if (node != null) {
       node.produceOutput(output);
-    }
+    }*/
   }
 }
