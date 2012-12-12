@@ -85,10 +85,9 @@ selection_statement returns [PNode node]
 
 iteration_statement returns [PNode node]
   : ^('while' e=expression s=statement) {node = new WhileStatementNode(
-      $e.node, $s.node, currentScope);} 
-//	  |
-//	^('do' s=statement e=expression) {node = new DoStatementNode(
-//     $e.node, $s.node, currentScope);}  
+      $e.node, $s.node, currentScope);} |
+	^('do' s=statement e=expression) {node = new DoStatementNode(
+     $e.node, $s.node, currentScope);}  
 ;
 
 jump_statement returns [PNode node]

@@ -210,14 +210,14 @@ while_iteration
 	  :  'while'^ '('! expression ')'! statement
 	  ;
   
-//do_iteration
-//	  : 'do'^ statement 'while'! '('! expression ')'! ';'!
-//	  ;  	
+do_iteration
+	  : 'do'^ statement 'while'! '('! expression ')'! ';'!
+	  ;  	
   
 iteration_statement
 //	: for_iteration
 	: while_iteration
-//	| do_iteration   
+	| do_iteration   
 	;
 //
 //labeled_statement
