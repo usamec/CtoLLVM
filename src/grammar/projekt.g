@@ -25,6 +25,7 @@ tokens {
   STRUCTDEC;
   STRUCTUSE;
   STRUCTMEMBER;
+  STRUCTMEMBERPOINT;
 }
 
 @parser::header {
@@ -118,7 +119,8 @@ postfix_expression
             ^(FUNCCALL $postfix_expression $a?) |
             '[' e=expression ']' ->
             ^(ARRAYSUBS $postfix_expression $e) |
-            '.' i=Identifier -> ^(STRUCTMEMBER $postfix_expression $i)
+            '.' i=Identifier -> ^(STRUCTMEMBER $postfix_expression $i) |
+            '->' i=Identifier -> ^(STRUCTMEMBERPOINT $postfix_expression $i)
           )*
 	;
 //
@@ -185,16 +187,8 @@ parameter_declaration
 function_definition
         : declaration_specifiers declarator '{' block_item_list '}'
         -> ^(FUNCDEF declaration_specifiers declarator block_item_list)
-//	: declaration_specifiers declarator declaration_list ? compound_statement
 	;
-//	
-//declaration_list
-//	: (declaration) (declaration)*
-//	;
-//		
-//	
-//
-//
+
 statement
 //	: labeled_statement
 	: compound_statement

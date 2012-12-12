@@ -233,6 +233,8 @@ expression returns [PNode node]
         {node = new DereferenceNode(new AddNode($a.node, $b.node));}
   | ^(STRUCTMEMBER a=expression i=Identifier)
         {node = new StructMemberNode($a.node, $i.text);}
+  | ^(STRUCTMEMBERPOINT a=expression i=Identifier)
+        {node = new StructMemberNode(new DereferenceNode($a.node), $i.text);}
   | f=function_call {node = $f.node;}
   | i=Identifier {node = new IdentifierNode($i.text, currentScope);}
   | i=Integer {node = new IntegerConstantNode($i.text);}
