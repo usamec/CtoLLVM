@@ -5,15 +5,33 @@ public class StructType implements Type {
   boolean incomplete = true;
   String internalName;
   List<DeclaredVariable> declaredVariables;
+  Map<String, Integer> variablePositions;
 
   public StructType(String internalName) {
     this.incomplete = true;
     this.internalName = internalName;
+    this.variablePositions = new HashMap<String, Integer>();
   }
 
   public void setDeclaredVariables(List<DeclaredVariable> declaredVariables) {
     this.incomplete = false;
     this.declaredVariables = declaredVariables;
+    int ind = 0;
+    for (DeclaredVariable d : this.declaredVariables) {
+      variablePositions.put(d.name, ind);
+      ind++;
+    }
+  }
+
+  public int getMemberIndex(String member) throws Exception {
+    if (!variablePositions.containsKey(member)) {
+      throw new Exception("Unknown member name");
+    }
+    return variablePositions.get(member);
+  }
+
+  public Type getMemberType(int index) {
+    return declaredVariables.get(index).type;
   }
 
   public boolean isIncomplete() {

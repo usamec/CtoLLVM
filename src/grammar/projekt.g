@@ -24,6 +24,7 @@ tokens {
   POINTER;
   STRUCTDEC;
   STRUCTUSE;
+  STRUCTMEMBER;
 }
 
 @parser::header {
@@ -116,7 +117,8 @@ postfix_expression
           ( '(' a=argument_expression_list? ')' -> 
             ^(FUNCCALL $postfix_expression $a?) |
             '[' e=expression ']' ->
-            ^(ARRAYSUBS $postfix_expression $e)
+            ^(ARRAYSUBS $postfix_expression $e) |
+            '.' i=Identifier -> ^(STRUCTMEMBER $postfix_expression $i)
           )*
 	;
 //

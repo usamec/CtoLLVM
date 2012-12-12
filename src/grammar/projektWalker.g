@@ -210,6 +210,8 @@ expression returns [PNode node]
   | ^(UNARYADDRESS a=expression) {node = new AddressNode($a.node);}
   | ^(ARRAYSUBS a=expression b=expression)
         {node = new DereferenceNode(new AddNode($a.node, $b.node));}
+  | ^(STRUCTMEMBER a=expression i=Identifier)
+        {node = new StructMemberNode($a.node, $i.text);}
   | f=function_call {node = $f.node;}
   | i=Identifier {node = new IdentifierNode($i.text, currentScope);}
   | i=Integer {node = new IntegerConstantNode($i.text);}
