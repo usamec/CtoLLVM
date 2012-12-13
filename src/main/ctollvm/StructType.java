@@ -76,8 +76,13 @@ public class StructType implements Type {
   }
   
   public int sizeof() {
-    // TODO: ked je complete, tak vyratat
-    return 0;
+    int ret = 0;
+    if (!incomplete) {
+      for (DeclaredVariable v : declaredVariables) {
+        ret += v.type.sizeof();
+      }
+    }
+    return ret;
   }
 
   public boolean isPointer() {

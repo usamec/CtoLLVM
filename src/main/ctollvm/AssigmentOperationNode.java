@@ -19,6 +19,8 @@ public class AssigmentOperationNode implements PNode {
     EvalResult r = rhs.produceOutput(out);
     if (operation.equals("+"))
       return AssigmentNode.evaluateOperation(l, AddNode.evaluateOperation(l, r, out), out);
+    if (operation.equals("-"))
+      return AssigmentNode.evaluateOperation(l, MinusNode.evaluateOperation(l, r, out), out);
     if (operation.equals("*"))
       return AssigmentNode.evaluateOperation(l, MulNode.evaluateOperation(l, r, out), out);
     if (operation.equals("/"))

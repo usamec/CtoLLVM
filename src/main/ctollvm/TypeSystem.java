@@ -242,7 +242,15 @@ public class TypeSystem {
           result.getRepresentation(), new_type.getRepresentation());
       return res;
     }
-
+    
+    if (new_type.isIntegral() && result.type.isPointer()) {
+      EvalResult res = new EvalResult(new_type);
+      out.printf("%s = ptrtoint %s %s to %s\n",
+          res.getRepresentation(), result.type.getRepresentation(),
+          result.getRepresentation(), new_type.getRepresentation());
+      return res;
+    }
+    
     if (new_type.isDouble() && result.type.isDouble()) {
       EvalResult res = new EvalResult(new_type);
       if (new_type.sizeof() > result.type.sizeof()) {

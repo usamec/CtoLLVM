@@ -212,7 +212,7 @@ array_declarator returns [DeclarationProcessor node]
 
 expression returns [PNode node]
   : ^('+' a=expression b=expression) {node = new AddNode($a.node, $b.node);}
-  | ^('-' a=expression b=expression) {node = null;}
+  | ^('-' a=expression b=expression) {node = new MinusNode($a.node, $b.node);}
   | ^('*' a=expression b=expression) {node = new MulNode($a.node, $b.node);}
   | ^('/' a=expression b=expression) {node = new DivNode($a.node, $b.node);}
   | ^('%' a=expression b=expression) {node = new RemNode($a.node, $b.node);}
@@ -221,7 +221,7 @@ expression returns [PNode node]
   | ^('*=' a=expression b=expression) {node = new AssigmentOperationNode($a.node, $b.node, "*");}  
   | ^('/=' a=expression b=expression) {node = new AssigmentOperationNode($a.node, $b.node, "/");}  
   | ^('%=' a=expression b=expression) {node = new AssigmentOperationNode($a.node, $b.node, "\%");}  
-  | ^('-=' a=expression b=expression) {node = null;}
+  | ^('-=' a=expression b=expression) {node = new AssigmentOperationNode($a.node, $b.node, "-");}  
   | ^('<<=' a=expression b=expression) {node = null;}
   | ^('>>=' a=expression b=expression) {node = null;}
   | ^('&=' a=expression b=expression) {node = null;}
@@ -238,7 +238,7 @@ expression returns [PNode node]
   | ^(PREFIXPLUSPLUS a=expression) {node = new AssigmentOperationNode($a.node,
       new IntegerConstantNode("1"), "+");}
   | ^(PREFIXMINUSMINUS a=expression) {node = new AssigmentOperationNode($a.node,
-      new IntegerConstantNode("-1"), "+");}
+      new IntegerConstantNode("1"), "-");}
   | ^(UNARYPLUS a=expression) 
   | ^(UNARYMINUS a=expression)
   | ^(UNARYDEREFERENCE a=expression) {node = new DereferenceNode($a.node);}
