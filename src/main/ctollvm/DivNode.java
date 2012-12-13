@@ -10,12 +10,9 @@ public class DivNode implements PNode {
     this.lhs = lhs;
     this.rhs = rhs;
   }
-  @Override
-  public EvalResult produceOutput(PrintStream out) throws Exception {
-    int id = IdCounter.GetNewId();
-    EvalResult l = lhs.produceOutput(out);
-    EvalResult r = rhs.produceOutput(out);
-    
+
+  static public EvalResult evaluateOperation(EvalResult l, EvalResult r, PrintStream out)
+      throws Exception {
     if (l.type != r.type) {
       EvalResult l1 = TypeSystem.getInstance().unifyTypes(l, r, out);
       if (l1 == null) {
@@ -33,6 +30,7 @@ public class DivNode implements PNode {
     EvalResult res = new EvalResult(l.type);
 
     if (l.type.isIntegral()) {
+      // TODO: unsigned div
       out.println(String.format("%s = sdiv %s %s, %s", 
           res.getRepresentation(), l.type.getRepresentation(),
           l.getRepresentation(), r.getRepresentation()));
@@ -45,5 +43,13 @@ public class DivNode implements PNode {
     }
 
     return res;
+  }
+
+  @Override
+  public EvalResult produceOutput(PrintStream out) throws Exception {
+    EvalResult l = lhs.produceOutput(out);
+    EvalResult r = rhs.produceOutput(out);
+    
+    return evaluateOperation(l, r, out);
   }
 }

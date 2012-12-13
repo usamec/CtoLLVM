@@ -10,12 +10,9 @@ public class MulNode implements PNode {
     this.lhs = lhs;
     this.rhs = rhs;
   }
-  @Override
-  public EvalResult produceOutput(PrintStream out) throws Exception {
-    int id = IdCounter.GetNewId();
-    EvalResult l = lhs.produceOutput(out);
-    EvalResult r = rhs.produceOutput(out);
 
+  static public EvalResult evaluateOperation(EvalResult l, EvalResult r, PrintStream out) 
+      throws Exception {
     if (l.type != r.type) {
       EvalResult l1 = TypeSystem.getInstance().unifyTypes(l, r, out);
       if (l1 == null) {
@@ -45,5 +42,13 @@ public class MulNode implements PNode {
     }
 
     return res;
+  }
+
+  @Override
+  public EvalResult produceOutput(PrintStream out) throws Exception {
+    EvalResult l = lhs.produceOutput(out);
+    EvalResult r = rhs.produceOutput(out);
+
+    return evaluateOperation(l, r, out);
   }
 }
