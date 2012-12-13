@@ -10,6 +10,8 @@ tokens {
   BLI;
   UNARYPLUS;
   UNARYMINUS;
+  UNARYNOT;
+  UNARYNEG;
   UNARYADDRESS;
   UNARYDEREFERENCE;
   COMPOUND;
@@ -109,6 +111,10 @@ unary_expression
 //        cast_expression)
         | '&' cast_expression -> ^(UNARYADDRESS cast_expression)
         | '*' cast_expression -> ^(UNARYDEREFERENCE cast_expression)
+        | '+' cast_expression -> ^(UNARYPLUS cast_expression)
+        | '-' cast_expression -> ^(UNARYMINUS cast_expression)
+        | '!' cast_expression -> ^(UNARYNOT cast_expression)
+        | '~' cast_expression -> ^(UNARYNEG cast_expression)
 
 //	| 'sizeof' unary_expression
 //	| 'sizeof '(' type_name ')'

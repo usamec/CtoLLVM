@@ -239,8 +239,10 @@ expression returns [PNode node]
       new IntegerConstantNode("1"), "+");}
   | ^(PREFIXMINUSMINUS a=expression) {node = new AssigmentOperationNode($a.node,
       new IntegerConstantNode("1"), "-");}
-  | ^(UNARYPLUS a=expression) 
+  | ^(UNARYPLUS a=expression) {node = new UnaryPlusNode($a.node);}
   | ^(UNARYMINUS a=expression)
+  | ^(UNARYNOT a=expression)
+  | ^(UNARYNEG a=expression)
   | ^(UNARYDEREFERENCE a=expression) {node = new DereferenceNode($a.node);}
   | ^(UNARYADDRESS a=expression) {node = new AddressNode($a.node);}
   | ^(ARRAYSUBS a=expression b=expression)

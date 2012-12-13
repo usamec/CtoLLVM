@@ -266,11 +266,18 @@ public class TypeSystem {
     }
     if (new_type.isIntegral() && result.type.isIntegral()) {
       EvalResult res = new EvalResult(new_type);
-      // TODO: toto cele aj pre unsigned
       if (new_type.sizeof() > result.type.sizeof()) {
-        out.printf("%s = sext %s %s to %s\n",
-            res.getRepresentation(), result.type.getRepresentation(),
-            result.getRepresentation(), new_type.getRepresentation());
+        if (new_type.isSigned()) {
+          out.printf("%s = sext %s %s to %s\n",
+              res.getRepresentation(), result.type.getRepresentation(),
+              result.getRepresentation(), new_type.getRepresentation());
+        } else {
+          out.printf("%s = zext %s %s to %s\n",
+              res.getRepresentation(), result.type.getRepresentation(),
+              result.getRepresentation(), new_type.getRepresentation());
+        }
+      } else if (new_type.sizeof() == result.type.sizeof()) {
+        res.name = result.name;
       } else {
         out.printf("%s = trunc %s %s to %s\n",
             res.getRepresentation(), result.type.getRepresentation(),
@@ -278,8 +285,19 @@ public class TypeSystem {
       }
       return res;
     }
-    // TODO: konverzie signed -> unsigned a opacne
     return null;
+  }
+
+  EvalResult promoteInteger(EvalResult a, PrintStream out) {
+    if (a.type.sizeof() == 8)
+      return a;
+    Type new_type;
+    if (a.type.isSigned()) {
+      new_type = getType("long long"); 
+    } else {
+      new_type = getType("unsigned long long"); 
+    }
+    return convertTo(new_type, a, out);
   }
 
   // Ak pre unifikaciu treba skonvertoval typ A na typ B, tak vrati novy result pre A
@@ -292,10 +310,11 @@ public class TypeSystem {
     if (b.type.isDouble() && a.type.isDouble() && b.type.sizeof() > a.type.sizeof()) {
       return convertTo(b.type, a, out);
     }
-    if (b.type.isIntegral() && a.type.isIntegral() && b.type.sizeof() > a.type.sizeof()) {
+    if (b.type.isIntegral() && a.type.isIntegral() && 
+        (b.type.sizeof() > a.type.sizeof() || (b.type.sizeof() == a.type.sizeof() &&
+        a.type.isSigned()))) {
       return convertTo(b.type, a, out);
     }
-    // TODO: konverzie signed -> unsigned a opacne
     return null;
   }
 }
