@@ -69,8 +69,13 @@ public class FunctionParameterNode {
     } else if (structDeclaration != null) {
       t = structDeclaration.processDeclaration(null);
     } 
+    t = declaration.processTypeAll(t);
+    if (t.isArray()) {
+      ArrayType at = (ArrayType) t;
+      t = TypeSystem.getInstance().getPointerType(at.getPointerTo());
+    }
     // TODO: ak je typ array, tak zmenit na pointer
-    return declaration.processTypeAll(t);
+    return t;
   }
 
   public String getRepresentation() throws Exception {

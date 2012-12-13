@@ -19,7 +19,11 @@ public class FunctionType implements Type {
   }
 
   public String getRepresentation() {
-    StringBuffer buf = new StringBuffer(returnValue.getRepresentation());
+    StringBuffer buf;
+    if (returnValue.isVoid())
+      buf = new StringBuffer("void");
+    else
+      buf = new StringBuffer(returnValue.getRepresentation());
     buf.append(" (");
     if (arguments != null) {
       boolean first = true;
