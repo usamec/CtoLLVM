@@ -14,6 +14,9 @@ LLVM sa pusta prikazmi: llvm-as -f test.ll && lli test.bc
 
 Co este nejde (a malo by):
 - &, ^, |, ==, !=, &=, ^=, |=, \<\<, \>\> (a ich verzie s =)
+- postfixove ++, --
+- sizeof
+- explicitny type cast
 - for
 - switch
 - ternarny operator (X ? Y : Z)
