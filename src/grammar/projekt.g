@@ -53,13 +53,8 @@ tokens {
 // EOF
 // ;
 
-<<<<<<< HEAD
-parse  
-:  external_declaration* EOF! 
-=======
 parse
 : external_declaration* EOF!
->>>>>>> pridany for cyklus
 //: abstract_declarator EOF!
 ;
 
@@ -104,20 +99,6 @@ additive_expression
 ;
 
 multiplicative_expression
-<<<<<<< HEAD
-:	(cast_expression) (('*' | '/' | '%')^ cast_expression)*
-	;
-
-cast_expression options {backtrack=true;}
-:	unary_expression
-	|	'(' type_name ')' cast_expression -> ^(CAST type_name cast_expression)
-	;	
-
-unary_expression options {backtrack=true;}
-:	postfix_expression
-	|'++' unary_expression -> ^(PREFIXPLUSPLUS unary_expression)
-	|'--' unary_expression -> ^(PREFIXMINUSMINUS unary_expression)
-=======
 : (cast_expression) (('*' | '/' | '%')^ cast_expression)*
 ;
 
@@ -130,24 +111,16 @@ unary_expression options {backtrack=true;}
 : postfix_expression
 |'++' unary_expression -> ^(PREFIXPLUSPLUS unary_expression)
 |'--' unary_expression -> ^(PREFIXMINUSMINUS unary_expression)
->>>>>>> pridany for cyklus
         | '&' cast_expression -> ^(UNARYADDRESS cast_expression)
         | '*' cast_expression -> ^(UNARYDEREFERENCE cast_expression)
         | '+' cast_expression -> ^(UNARYPLUS cast_expression)
         | '-' cast_expression -> ^(UNARYMINUS cast_expression)
         | '!' cast_expression -> ^(UNARYNOT cast_expression)
         | '~' cast_expression -> ^(UNARYNEG cast_expression)
-<<<<<<< HEAD
-  	| 'sizeof' unary_expression -> ^(SIZEOF unary_expression)
-  	| 'sizeof' '(' type_name ')' -> ^(SIZEOF type_name)
-	;
-	
-=======
    | 'sizeof' unary_expression -> ^(SIZEOF unary_expression)
    | 'sizeof' '(' type_name ')' -> ^(SIZEOF type_name)
 ;
 
->>>>>>> pridany for cyklus
 postfix_expression
 // : (primary_expression | '(' type_name ')' '{' initializer_list+ '}') ('[' expression ']' | '(' argument_expression_list? ')' | '.' Identifier | '-'> Identifier | '++' | '--')*
         : (primary_expression -> primary_expression)
@@ -191,11 +164,7 @@ conditional_expression
 //
 //
 expression
-<<<<<<< HEAD
-  : 	assignment_expression (','^ assignment_expression)*
-=======
   : assignment_expression (','^ assignment_expression)*
->>>>>>> pridany for cyklus
 ;
 //
 //translation_unit:
@@ -219,19 +188,11 @@ parameter_list
   ;
 
 // TODO: fixnut na spravny tvar
-<<<<<<< HEAD
-parameter_declaration options {backtrack=true;} 
-        : declaration_specifiers declarator -> ^(PDEC declaration_specifiers ^(IDEC declarator))
-	| declaration_specifiers abstract_declarator -> ^(PDEC declaration_specifiers ^(IDEC
-        abstract_declarator))
-	;
-=======
 parameter_declaration options {backtrack=true;}
         : declaration_specifiers declarator -> ^(PDEC declaration_specifiers ^(IDEC declarator))
 | declaration_specifiers abstract_declarator -> ^(PDEC declaration_specifiers ^(IDEC
         abstract_declarator))
 ;
->>>>>>> pridany for cyklus
 
 function_definition
         : declaration_specifiers declarator '{' block_item_list '}'
@@ -248,12 +209,11 @@ statement
         | empty_statement
 ;
 
-
 for_iteration 
 	  :  'for'^ '('! expression? ';' expression? ';' expression? ')'! statement
 //	  |  'for'^ '('! declaration expression? ';'! expression? ')'! statement
 	  ;
-	  
+
 while_iteration
 : 'while'^ '('! expression ')'! statement
 ;
@@ -450,19 +410,11 @@ struct_declarator
 //
 //
 //identifier_list
-<<<<<<< HEAD
-//	: (identifier_list ',' ) ?  Identifier
-//	;
-//
-type_name	
-	: specifier_qualifier_list abstract_declarator -> 
-=======
 // : (identifier_list ',' ) ? Identifier
 // ;
 //
 type_name
 : specifier_qualifier_list abstract_declarator ->
->>>>>>> pridany for cyklus
           ^(TYPENAME specifier_qualifier_list ^(IDEC abstract_declarator))
 ;
 //
@@ -476,37 +428,6 @@ ne_abstract_declarator
   | pointer abstract_declarator -> ^(POINTER abstract_declarator)
 ;
 // TODO: vediet preparsovat vsetko
-<<<<<<< HEAD
-direct_abstract_declarator 
-	: ( -> DUMMYIDENTIFIER | '(' ne_abstract_declarator ')' -> ne_abstract_declarator) 
-          ( '[' type_qualifier_list? a=assignment_expression ? ']' ->
-            ^(ARRAYDEC $direct_abstract_declarator $a?) 
-          | '[' 'static' type_qualifier_list ? assignment_expression ']' 
-          | '[' type_qualifier_list 'static' assignment_expression ']' 
-          | '[' '*' ']' 
-          | '(' p=parameter_type_list? ')' -> ^(FUNCDEC $direct_abstract_declarator $p?) 
-          )*
-	;
-
-ne_direct_abstract_declarator 
-	: ( '(' ne_abstract_declarator ')' -> ne_abstract_declarator) 
-          ( '[' type_qualifier_list? a=assignment_expression ? ']' ->
-            ^(ARRAYDEC $ne_direct_abstract_declarator $a?) 
-          | '[' 'static' type_qualifier_list ? assignment_expression ']' 
-          | '[' type_qualifier_list 'static' assignment_expression ']' 
-          | '[' '*' ']' 
-          | '(' p=parameter_type_list? ')' -> ^(FUNCDEC $ne_direct_abstract_declarator $p?) 
-          )* 
-        | ( '[' type_qualifier_list? a=assignment_expression ? ']' ->
-            ^(ARRAYDEC $ne_direct_abstract_declarator $a?) 
-          | '[' 'static' type_qualifier_list ? assignment_expression ']' 
-          | '[' type_qualifier_list 'static' assignment_expression ']' 
-          | '[' '*' ']' 
-          | '(' p=parameter_type_list? ')' -> ^(FUNCDEC $ne_direct_abstract_declarator $p?) 
-          )+
-          
-	;
-=======
 direct_abstract_declarator
 : ( -> DUMMYIDENTIFIER | '(' ne_abstract_declarator ')' -> ne_abstract_declarator)
           ( '[' type_qualifier_list? a=assignment_expression ? ']' ->
@@ -536,7 +457,6 @@ ne_direct_abstract_declarator
           )+
           
 ;
->>>>>>> pridany for cyklus
 
 
 
@@ -740,11 +660,7 @@ Float
 ;
 
 fragment Punctuation
-<<<<<<< HEAD
-: '!' | '"' |  '#' | '(' | ')' | '%' | '&' | '\'' | '*' | '+' | ',' | '-' | '.' | '/' | ':'| ';' | '<' | '=' | '>' | '?' | '[' | '\\' | ']' | '^' | '{' | '|' | '}' | '~'
-=======
 : '!' | '"' | '#' | '(' | ')' | '%' | '&' | '\'' | '*' | '+' | ',' | '-' | '.' | '/' | ':'| ';' | '<' | '=' | '>' | '?' | '[' | '\\' | ']' | '^' | '{' | '|' | '}' | '~'
->>>>>>> pridany for cyklus
 ;
 
 fragment Char
