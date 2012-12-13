@@ -2,7 +2,7 @@ grammar projekt;
 
 options {
   output=AST;
-//  backtrack=true;
+// backtrack=true;
 }
 
 tokens {
@@ -46,59 +46,65 @@ tokens {
   import ctollvm.*;
 }
 //parse
-//  :  (t=. 
-//          {System.out.printf("text: \%-7s  type: \%s \n", 
-//           $t.text, tokenNames[$t.type]);}
-//     )* 
-//     EOF
-//  ;
+// : (t=.
+// {System.out.printf("text: \%-7s type: \%s \n",
+// $t.text, tokenNames[$t.type]);}
+// )*
+// EOF
+// ;
 
+<<<<<<< HEAD
 parse  
 :  external_declaration* EOF! 
+=======
+parse
+: external_declaration* EOF!
+>>>>>>> pridany for cyklus
 //: abstract_declarator EOF!
 ;
 
 //original OR is left-recursive
 logical_or_expression
-:	(logical_and_expression) ('||'^ logical_and_expression)*
-	;	 
+: (logical_and_expression) ('||'^ logical_and_expression)*
+;
 //
-//	
+//
 logical_and_expression
-: 	(inclusive_or_expression) ('&&'^ inclusive_or_expression)*
-	;
-//	
+: (inclusive_or_expression) ('&&'^ inclusive_or_expression)*
+;
+//
 inclusive_or_expression
-:	(exclusive_or_expression)// ('|' exclusive_or_expression)*
-	;
+: (exclusive_or_expression)// ('|' exclusive_or_expression)*
+;
 //
 exclusive_or_expression
-: 	(and_expression)// ('^' and_expression)*	
-	;
+: (and_expression)// ('^' and_expression)*
+;
 //
 and_expression
-:	(equality_expression)// ('&' equality_expression)*
-	;
+: (equality_expression)// ('&' equality_expression)*
+;
 //
 equality_expression
-:	(relational_expression) (('!=' | '==')^ relational_expression)*
-	;
-//	
-//	
+: (relational_expression) (('!=' | '==')^ relational_expression)*
+;
+//
+//
 //
 relational_expression
-:	(shift_expression) (('<=' | '>=' | '<' | '>')^  shift_expression)*
-	;
+: (shift_expression) (('<=' | '>=' | '<' | '>')^ shift_expression)*
+;
 //
 shift_expression
-:	(additive_expression)// (Shift_operator additive_expression)*
-	;
-//	
+: (additive_expression)// (Shift_operator additive_expression)*
+;
+//
 additive_expression
-:	(multiplicative_expression) (('+' | '-')^ multiplicative_expression)*
-	;
-	
+: (multiplicative_expression) (('+' | '-')^ multiplicative_expression)*
+;
+
 multiplicative_expression
+<<<<<<< HEAD
 :	(cast_expression) (('*' | '/' | '%')^ cast_expression)*
 	;
 
@@ -111,145 +117,179 @@ unary_expression options {backtrack=true;}
 :	postfix_expression
 	|'++' unary_expression -> ^(PREFIXPLUSPLUS unary_expression)
 	|'--' unary_expression -> ^(PREFIXMINUSMINUS unary_expression)
+=======
+: (cast_expression) (('*' | '/' | '%')^ cast_expression)*
+;
+
+cast_expression options {backtrack=true;}
+: unary_expression
+| '(' type_name ')' cast_expression -> ^(CAST type_name cast_expression)
+;
+
+unary_expression options {backtrack=true;}
+: postfix_expression
+|'++' unary_expression -> ^(PREFIXPLUSPLUS unary_expression)
+|'--' unary_expression -> ^(PREFIXMINUSMINUS unary_expression)
+>>>>>>> pridany for cyklus
         | '&' cast_expression -> ^(UNARYADDRESS cast_expression)
         | '*' cast_expression -> ^(UNARYDEREFERENCE cast_expression)
         | '+' cast_expression -> ^(UNARYPLUS cast_expression)
         | '-' cast_expression -> ^(UNARYMINUS cast_expression)
         | '!' cast_expression -> ^(UNARYNOT cast_expression)
         | '~' cast_expression -> ^(UNARYNEG cast_expression)
+<<<<<<< HEAD
   	| 'sizeof' unary_expression -> ^(SIZEOF unary_expression)
   	| 'sizeof' '(' type_name ')' -> ^(SIZEOF type_name)
 	;
 	
+=======
+   | 'sizeof' unary_expression -> ^(SIZEOF unary_expression)
+   | 'sizeof' '(' type_name ')' -> ^(SIZEOF type_name)
+;
+
+>>>>>>> pridany for cyklus
 postfix_expression
-//	: (primary_expression | '(' type_name ')' '{' initializer_list+ '}') ('[' expression ']' | '(' argument_expression_list? ')' | '.' Identifier | '-'> Identifier | '++' | '--')*
-        : (primary_expression -> primary_expression) 
-          ( '(' a=argument_expression_list? ')' -> 
+// : (primary_expression | '(' type_name ')' '{' initializer_list+ '}') ('[' expression ']' | '(' argument_expression_list? ')' | '.' Identifier | '-'> Identifier | '++' | '--')*
+        : (primary_expression -> primary_expression)
+          ( '(' a=argument_expression_list? ')' ->
             ^(FUNCCALL $postfix_expression $a?) |
             '[' e=expression ']' ->
             ^(ARRAYSUBS $postfix_expression $e) |
             '.' i=Identifier -> ^(STRUCTMEMBER $postfix_expression $i) |
             '->' i=Identifier -> ^(STRUCTMEMBERPOINT $postfix_expression $i)
           )*
-	;
+;
 //
 argument_expression_list
-	: (assignment_expression) (','! assignment_expression)*	
-	;
+: (assignment_expression) (','! assignment_expression)*
+;
 //
 
 primary_expression
-	: Identifier
-	| Integer
+: Identifier
+| Integer
         | Float
         | String_constant
         | Character_constant
         | '('! expression ')'!
-	;
-	
+;
+
 //
 assignment_expression options {backtrack=true;}
-  : unary_expression ('=' | '*=' |  '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=')^ assignment_expression	
+  : unary_expression ('=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=')^ assignment_expression
   | conditional_expression
-	;
-//	
+;
+//
 //constant_expression
-//	: conditional_expression
-//	;
+// : conditional_expression
+// ;
 //
 conditional_expression
   : logical_or_expression
-//	: logical_or_expression ( | logical_or_expression '?' expression ':' conditional_expression )
-	; 	
-//	
+// : logical_or_expression ( | logical_or_expression '?' expression ':' conditional_expression )
+;
+//
 //
 expression
+<<<<<<< HEAD
   : 	assignment_expression (','^ assignment_expression)*
+=======
+  : assignment_expression (','^ assignment_expression)*
+>>>>>>> pridany for cyklus
 ;
-//	
+//
 //translation_unit:
-//	(: external_declaration) (external_declaration)*
-//	;
+// (: external_declaration) (external_declaration)*
+// ;
 //
 external_declaration options {backtrack=true;}
-	: function_definition
-	| declaration	
-	;
-//	
+: function_definition
+| declaration
+;
+//
 
 
 parameter_type_list
-	: parameter_list (','! '...')?
-	;
+: parameter_list (','! '...')?
+;
 
 parameter_list
-	: parameter_declaration (',' parameter_declaration)* -> 
-        parameter_declaration (parameter_declaration)* 
+: parameter_declaration (',' parameter_declaration)* ->
+        parameter_declaration (parameter_declaration)*
   ;
 
 // TODO: fixnut na spravny tvar
+<<<<<<< HEAD
 parameter_declaration options {backtrack=true;} 
         : declaration_specifiers declarator -> ^(PDEC declaration_specifiers ^(IDEC declarator))
 	| declaration_specifiers abstract_declarator -> ^(PDEC declaration_specifiers ^(IDEC
         abstract_declarator))
 	;
+=======
+parameter_declaration options {backtrack=true;}
+        : declaration_specifiers declarator -> ^(PDEC declaration_specifiers ^(IDEC declarator))
+| declaration_specifiers abstract_declarator -> ^(PDEC declaration_specifiers ^(IDEC
+        abstract_declarator))
+;
+>>>>>>> pridany for cyklus
 
 function_definition
         : declaration_specifiers declarator '{' block_item_list '}'
         -> ^(FUNCDEF declaration_specifiers declarator block_item_list)
-	;
+;
 
 statement
-//	: labeled_statement
-	: compound_statement
-	| expression_statement
-	| selection_statement
-	| iteration_statement
-	| jump_statement
+// : labeled_statement
+: compound_statement
+| expression_statement
+| selection_statement
+| iteration_statement
+| jump_statement
         | empty_statement
-	;
-//
-//for_iteration 
-//  	:  'for' '(' expression? ';' expression? ';' expression? ')' statement
-//	  |  'for' '(' declaration expression? ';'expression? ')' statement
-//	  ;  
-//  
-while_iteration  
-	  :  'while'^ '('! expression ')'! statement
+;
+
+
+for_iteration 
+	  :  'for'^ '('! expression? ';' expression? ';' expression? ')'! statement
+//	  |  'for'^ '('! declaration expression? ';'! expression? ')'! statement
 	  ;
+	  
+while_iteration
+: 'while'^ '('! expression ')'! statement
+;
   
 do_iteration
-	  : 'do'^ statement 'while'! '('! expression ')'! ';'!
-	  ;  	
+: 'do'^ statement 'while'! '('! expression ')'! ';'!
+;
   
 iteration_statement
-//	: for_iteration
-	: while_iteration
-	| do_iteration   
-	;
+: for_iteration
+| while_iteration
+| do_iteration
+;
 //
 //labeled_statement
-//	:  Identifier ':' statement
-//	| 'case' constant_expression ':' statement
-//	| 'default' : statement
-//	;	
+// : Identifier ':' statement
+// | 'case' constant_expression ':' statement
+// | 'default' : statement
+// ;
 //
 compound_statement
-	: '{' block_item_list '}' -> ^(COMPOUND block_item_list)
-	;
+: '{' block_item_list '}' -> ^(COMPOUND block_item_list)
+;
 //
 block_item_list
-	: block_item* -> ^(BLI block_item*)
-	;
+: block_item* -> ^(BLI block_item*)
+;
 
 block_item options {backtrack=true;}
-	: statement
-	| declaration
-	;
+: statement
+| declaration
+;
 //
 expression_statement
-	: expression ';'!
-	;	
+: expression ';'!
+;
 //
 empty_statement
         : ';' -> EMPTYSTAT
@@ -257,54 +297,54 @@ empty_statement
 
 //
 selection_statement
-	: 'if'^ '('! expression ')'! statement  ('else'! statement) ?
-//	| 'switch' '(' expression ')' statement
-	;
-//	
+: 'if'^ '('! expression ')'! statement ('else'! statement) ?
+// | 'switch' '(' expression ')' statement
+;
+//
 //
 jump_statement
-	: 'goto' Identifier ';' -> EMPTYSTAT  // F*ck GOTO!!!
-	| 'continue' ';'!
-	| 'break'  ';'!
-	| 'return'^ expression ? ';'!
-	;
+: 'goto' Identifier ';' -> EMPTYSTAT // F*ck GOTO!!!
+| 'continue' ';'!
+| 'break' ';'!
+| 'return'^ expression ? ';'!
+;
 //
 
 declaration
 // TODO: miesto Type_specifier tu dat poriadne declaration_specifiers
-  : declaration_specifiers (init_declarator (',' init_declarator)*)? ';' -> 
+  : declaration_specifiers (init_declarator (',' init_declarator)*)? ';' ->
       ^(DEC declaration_specifiers init_declarator*)
 ;
 
 declarator
-	: direct_declarator
+: direct_declarator
         | pointer declarator -> ^(POINTER declarator)
-	;
+;
 
 pointer
-	: '*' type_qualifier_list? -> ^('*')
-	;
+: '*' type_qualifier_list? -> ^('*')
+;
 
 type_qualifier_list
-	: (Type_qualifier) (Type_qualifier)*
-	;
+: (Type_qualifier) (Type_qualifier)*
+;
 
 // TODO vediet preparsovat setko
 direct_declarator
-	: (Identifier -> Identifier | '(' declarator ')' -> declarator)
-          ('[' type_qualifier_list ? a=assignment_expression ? ']' -> 
-              ^(ARRAYDEC $direct_declarator $a?) 
+: (Identifier -> Identifier | '(' declarator ')' -> declarator)
+          ('[' type_qualifier_list ? a=assignment_expression ? ']' ->
+              ^(ARRAYDEC $direct_declarator $a?)
           |'[' 'static' type_qualifier_list ? assignment_expression ']'
           |'[' type_qualifier_list 'static' assignment_expression ']'
           |'[' type_qualifier_list ? '*' ']'
-          |'(' p=parameter_type_list? ')' -> ^(FUNCDEC $direct_declarator $p?) 
-//          |'(' identifier_list ? ')'
+          |'(' p=parameter_type_list? ')' -> ^(FUNCDEC $direct_declarator $p?)
+// |'(' identifier_list ? ')'
            )*
-	;
+;
 
 //declaration
-//	: declaration_specifiers init_declarator_list ? ';'
-//	;
+// : declaration_specifiers init_declarator_list ? ';'
+// ;
 //
 
 // Ideme tu spravit enforcement na to, aby kazdy declaration_specifiers mal aspon jeden
@@ -329,80 +369,80 @@ type_specifier_after
 ;
 
 declaration_specifiers
-	: declaration_specifiers_bonus (
+: declaration_specifiers_bonus (
           (comp_type_specifier declaration_specifiers_bonus) |
           (Type_specifier declaration_specifiers_all))
 ;
 
 //
 //init_declarator_list
-//	: ( init_declarator_list ',') ? init_declarator
-//	;
+// : ( init_declarator_list ',') ? init_declarator
+// ;
 //
 init_declarator
-	: declarator -> ^(IDEC declarator) //( '=' initializer ) ?
-	;
+: declarator -> ^(IDEC declarator) //( '=' initializer ) ?
+;
 //
 storage_class_specifier
-	: ('typedef'
-	| 'extern' 
-	| 'static' 
-	| 'auto' 
-	| 'register')
-	;
+: ('typedef'
+| 'extern'
+| 'static'
+| 'auto'
+| 'register')
+;
 //
 struct_or_union_specifier
-	: struct_or_union Identifier ? '{' struct_declaration_list '}' ->
+: struct_or_union Identifier ? '{' struct_declaration_list '}' ->
           ^(STRUCTDEC Identifier? struct_declaration_list)
-	| struct_or_union Identifier -> ^(STRUCTUSE Identifier)
-	;
+| struct_or_union Identifier -> ^(STRUCTUSE Identifier)
+;
 
 struct_or_union
-	: 'struct'
-	| 'union'
-	;
+: 'struct'
+| 'union'
+;
 //
 struct_declaration_list
-	: (struct_declaration)+
-	;
+: (struct_declaration)+
+;
 //
 struct_declaration
-	: specifier_qualifier_list struct_declarator_list ';'
-         -> ^(DEC specifier_qualifier_list struct_declarator_list) 
-	;
-//	
+: specifier_qualifier_list struct_declarator_list ';'
+         -> ^(DEC specifier_qualifier_list struct_declarator_list)
+;
+//
 specifier_qualifier_list
-	: (Type_qualifier!)* (
+: (Type_qualifier!)* (
           (Type_specifier (Type_qualifier! | Type_specifier)*) |
           (comp_type_specifier (Type_qualifier!)*)
           )
-	;
+;
 //
 struct_declarator_list
-	:  struct_declarator ( ','! struct_declarator_list ) ?
-	;
+: struct_declarator ( ','! struct_declarator_list ) ?
+;
 //
 struct_declarator
-	: declarator -> ^(IDEC declarator)
-//	| declarator ? ':'! constant_expression!
-	;
+: declarator -> ^(IDEC declarator)
+// | declarator ? ':'! constant_expression!
+;
 //
 //enum_specifier
-//	: 'enum' Identifier ? '{' enumerator_list (',' enumerator_list)* '}'
-//	| 'enum' Identifier
-//	;
-//  
+// : 'enum' Identifier ? '{' enumerator_list (',' enumerator_list)* '}'
+// | 'enum' Identifier
+// ;
+//
 //enumerator_list
-//	: (enumerator_list ',') ? enumerator
-//	;
-//  
+// : (enumerator_list ',') ? enumerator
+// ;
+//
 //enumerator
-//	: Enumeration_constant ('=' constant_expression) ?
-//	;
+// : Enumeration_constant ('=' constant_expression) ?
+// ;
 //
 //function_specifier
-//	: 'inline'
-//	;
+// : 'inline'
+// ;
 //
 //
 //
@@ -410,11 +450,19 @@ struct_declarator
 //
 //
 //identifier_list
+<<<<<<< HEAD
 //	: (identifier_list ',' ) ?  Identifier
 //	;
 //
 type_name	
 	: specifier_qualifier_list abstract_declarator -> 
+=======
+// : (identifier_list ',' ) ? Identifier
+// ;
+//
+type_name
+: specifier_qualifier_list abstract_declarator ->
+>>>>>>> pridany for cyklus
           ^(TYPENAME specifier_qualifier_list ^(IDEC abstract_declarator))
 ;
 //
@@ -428,6 +476,7 @@ ne_abstract_declarator
   | pointer abstract_declarator -> ^(POINTER abstract_declarator)
 ;
 // TODO: vediet preparsovat vsetko
+<<<<<<< HEAD
 direct_abstract_declarator 
 	: ( -> DUMMYIDENTIFIER | '(' ne_abstract_declarator ')' -> ne_abstract_declarator) 
           ( '[' type_qualifier_list? a=assignment_expression ? ']' ->
@@ -457,38 +506,69 @@ ne_direct_abstract_declarator
           )+
           
 	;
+=======
+direct_abstract_declarator
+: ( -> DUMMYIDENTIFIER | '(' ne_abstract_declarator ')' -> ne_abstract_declarator)
+          ( '[' type_qualifier_list? a=assignment_expression ? ']' ->
+            ^(ARRAYDEC $direct_abstract_declarator $a?)
+          | '[' 'static' type_qualifier_list ? assignment_expression ']'
+          | '[' type_qualifier_list 'static' assignment_expression ']'
+          | '[' '*' ']'
+          | '(' p=parameter_type_list? ')' -> ^(FUNCDEC $direct_abstract_declarator $p?)
+          )*
+;
+
+ne_direct_abstract_declarator
+: ( '(' ne_abstract_declarator ')' -> ne_abstract_declarator)
+          ( '[' type_qualifier_list? a=assignment_expression ? ']' ->
+            ^(ARRAYDEC $ne_direct_abstract_declarator $a?)
+          | '[' 'static' type_qualifier_list ? assignment_expression ']'
+          | '[' type_qualifier_list 'static' assignment_expression ']'
+          | '[' '*' ']'
+          | '(' p=parameter_type_list? ')' -> ^(FUNCDEC $ne_direct_abstract_declarator $p?)
+          )*
+        | ( '[' type_qualifier_list? a=assignment_expression ? ']' ->
+            ^(ARRAYDEC $ne_direct_abstract_declarator $a?)
+          | '[' 'static' type_qualifier_list ? assignment_expression ']'
+          | '[' type_qualifier_list 'static' assignment_expression ']'
+          | '[' '*' ']'
+          | '(' p=parameter_type_list? ')' -> ^(FUNCDEC $ne_direct_abstract_declarator $p?)
+          )+
+          
+;
+>>>>>>> pridany for cyklus
 
 
 
 //
 //typedef_name
-//	:Identifier
-//	;
+// :Identifier
+// ;
 //
 //initializer
-//	: assignment_expression
-//	| '{' initializer_list (',' initializer_list)* '}'
-//	;
+// : assignment_expression
+// | '{' initializer_list (',' initializer_list)* '}'
+// ;
 //
 //initializer_list
-//	: (initializer_list ',') ? designation ? initializer
-//	;
+// : (initializer_list ',') ? designation ? initializer
+// ;
 //
 //designation
-//	: designator_list '='
-//	;
+// : designator_list '='
+// ;
 //
 //designator_list
-//	: (designator) (designator)*
-//	;
+// : (designator) (designator)*
+// ;
 //
 //designator
-//	: '[' constant_expression ']'
-//	|. Identifier
-//	;
+// : '[' constant_expression ']'
+// |. Identifier
+// ;
 //
-//		  
-//	
+//
+//
 Whitespace
 : (' '
 | '\t'
@@ -505,34 +585,34 @@ Comment
 
 
 //Constant
-//	: Integer_constant
-	//| Floating_constant
-	//| Enumeration_constant
-//	| Character_constant
-//	;
+// : Integer_constant
+//| Floating_constant
+//| Enumeration_constant
+// | Character_constant
+// ;
 
 //Enumeration_constant
-//	: Identifier
-//	;
+// : Identifier
+// ;
 
 //Integer_constant
-//	: Integer
-//	;
+// : Integer
+// ;
 
 //Floating_constant
-//	: Float
-//	;
+// : Float
+// ;
 //
 //
 //Header_name:
-//	: //TODO
-//	;
+// : //TODO
+// ;
 //
 String_literal
-:	//TODO	   
+: //TODO
    ;
-//   
-//   
+//
+//
 //
 //
 fragment Digit_not_null
@@ -587,12 +667,12 @@ Keyword
 ;
 
 //Assignment_operator
-//: '=' | '*=' |  '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|='
-//	;
+//: '=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|='
+// ;
 
-	
+
 //Unary_operator
-//: '!' | '~' | '*' | '&'  | '-' | '+'
+//: '!' | '~' | '*' | '&' | '-' | '+'
 //;
 
 //Multiplicative_operator
@@ -604,23 +684,23 @@ Keyword
 //;
 
 //Relational_operator
-//:    '<=' | '>=' | '<' | '>' 
+//: '<=' | '>=' | '<' | '>'
 //;
 
 //Equality_operator
 //: '!=' | '=='
-//	;
+// ;
                         
 //Logical_operator
-//:    '&&' |  '||'
+//: '&&' | '||'
 //;
 
 //Bitwise_operator
-//:    '&' | '|' | '^'
+//: '&' | '|' | '^'
 //;
 
 Shift_operator
-:    '<<' | '>>'
+: '<<' | '>>'
 ;
 
 Boolean
@@ -644,7 +724,7 @@ fragment Integer_suffix
 ;
 
 fragment Integer_body
-: '0'  
+: '0'
 | Digit_not_null Digit*
 | '0' ('0'..'7')+
 | '0' ('x'|'X') Hexdigit+
@@ -654,13 +734,17 @@ Integer
 : Integer_body //Integer_suffix?
 ;
 
-Float     
+Float
 : Digit_not_null Digit* ('.' Digit*)? Exponent? Float_suffix?
 | '0'?'.' Digit* Exponent? Float_suffix?
 ;
 
 fragment Punctuation
+<<<<<<< HEAD
 : '!' | '"' |  '#' | '(' | ')' | '%' | '&' | '\'' | '*' | '+' | ',' | '-' | '.' | '/' | ':'| ';' | '<' | '=' | '>' | '?' | '[' | '\\' | ']' | '^' | '{' | '|' | '}' | '~'
+=======
+: '!' | '"' | '#' | '(' | ')' | '%' | '&' | '\'' | '*' | '+' | ',' | '-' | '.' | '/' | ':'| ';' | '<' | '=' | '>' | '?' | '[' | '\\' | ']' | '^' | '{' | '|' | '}' | '~'
+>>>>>>> pridany for cyklus
 ;
 
 fragment Char
@@ -692,7 +776,7 @@ fragment C_char
 
 Character_constant
 @after {
-  setText(Util.unescapeCString(getText().substring(1, getText().length()-1)));  
+  setText(Util.unescapeCString(getText().substring(1, getText().length()-1)));
 }
 : '\''C_char'\''
 ;
@@ -706,13 +790,13 @@ String_constant
   setText(Util.unescapeCString(getText().substring(1, getText().length()-1)));
 }
 //@after {
-//  setText(getText().substring(1, getText().length()-1).replaceAll("\\\\\\\\", "\\\\").
-//      replaceAll("\\\\'", "\\\\27").replaceAll("\\\\\"", "\\\\22").replaceAll("\\\\\\?", "\\\\3f").
-//    replaceAll("\\\\a", "\\\\07").replaceAll("\\\\b", "\\\\08").replaceAll("\\\\f", "\\\\0c").
-//    replaceAll("\\\\n", "\n").replaceAll("\\\\r", "\\\\0d").replaceAll("\\\\t", "\\\\09").
-//    replaceAll("\\\\v", "\\\\0b"));
+// setText(getText().substring(1, getText().length()-1).replaceAll("\\\\\\\\", "\\\\").
+// replaceAll("\\\\'", "\\\\27").replaceAll("\\\\\"", "\\\\22").replaceAll("\\\\\\?", "\\\\3f").
+// replaceAll("\\\\a", "\\\\07").replaceAll("\\\\b", "\\\\08").replaceAll("\\\\f", "\\\\0c").
+// replaceAll("\\\\n", "\n").replaceAll("\\\\r", "\\\\0d").replaceAll("\\\\t", "\\\\09").
+// replaceAll("\\\\v", "\\\\0b"));
 //}
-: '"' S_char* '"' 
+: '"' S_char* '"'
 ;
 
 
