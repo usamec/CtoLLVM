@@ -242,7 +242,7 @@ expression returns [PNode node]
   | ^(UNARYPLUS a=expression) {node = new UnaryPlusNode($a.node);}
   | ^(UNARYMINUS a=expression) {node = new UnaryMinusNode($a.node);}
   | ^(UNARYNOT a=expression) {node = new UnaryNotNode($a.node);}
-  | ^(UNARYNEG a=expression)
+  | ^(UNARYNEG a=expression) {node = new UnaryNegNode($a.node);}
   | ^(UNARYDEREFERENCE a=expression) {node = new DereferenceNode($a.node);}
   | ^(UNARYADDRESS a=expression) {node = new AddressNode($a.node);}
   | ^(ARRAYSUBS a=expression b=expression)
