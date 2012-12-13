@@ -31,6 +31,8 @@ tokens {
   PREFIXPLUSPLUS;
   PREFIXMINUSMINUS;
   DUMMYIDENTIFIER;
+  TYPENAME;
+  CAST;
 }
 
 @parser::header {
@@ -99,9 +101,9 @@ multiplicative_expression
 :	(cast_expression) (('*' | '/' | '%')^ cast_expression)*
 	;
 
-cast_expression
+cast_expression options {backtrack=true;}
 :	unary_expression
-//	|	'(' type_name ')' cast_expression
+	|	'(' type_name ')' cast_expression -> ^(CAST type_name cast_expression)
 	;	
 
 unary_expression
@@ -411,9 +413,10 @@ struct_declarator
 //	: (identifier_list ',' ) ?  Identifier
 //	;
 //
-//type_name	
-//	: specifier_qualifier_list abstract_declarator ?
-//	;
+type_name	
+	: specifier_qualifier_list abstract_declarator -> 
+          ^(TYPENAME specifier_qualifier_list ^(IDEC abstract_declarator))
+;
 //
 abstract_declarator
   : direct_abstract_declarator

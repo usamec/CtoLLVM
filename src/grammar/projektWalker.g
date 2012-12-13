@@ -80,6 +80,19 @@ parameter_declaration returns [FunctionParameterNode node]
       d=declarator {fn.setDeclaration($d.node);})
 ;
 
+type_name returns [TypeNameNode node]
+@init {
+  TypeNameNode fn = new TypeNameNode(currentScope);
+  node = fn;
+}
+  : ^(TYPENAME
+      (
+      t=Type_specifier {fn.addTypeSpecifier($t.text);} |
+      i=Identifier {fn.setTypedef($i.text);} |
+      s=struct_or_union_user {fn.setStruct($s.node);}
+      )*
+      d=declarator {fn.setDeclaration($d.node);})
+;
 
 block_item_list returns [PNode node]
 @init {
@@ -261,6 +274,7 @@ expression returns [PNode node]
   | i=Float {node = new FloatingConstantNode($i.text);}
   | i=String_constant {node = new StringConstantNode($i.text);}
   | i=Character_constant {node = new CharacterConstantNode($i.text);}
+  | ^(CAST t=type_name a=expression) {node = new CastNode($a.node, $t.node);}
 ;
 
 function_call returns [PNode node]
