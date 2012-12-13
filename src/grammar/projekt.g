@@ -280,9 +280,6 @@ type_qualifier_list
 	;
 
 direct_declarator
-//      : Identifier
-//      | Identifier '(' parameter_type_list? ')' -> ^(FUNCDEC Identifier parameter_type_list?)
-//;
 	: (Identifier -> Identifier | '(' declarator ')' -> declarator)
           ('[' type_qualifier_list ? a=assignment_expression ? ']' -> 
               ^(ARRAYDEC $direct_declarator $a?) 
