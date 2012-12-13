@@ -83,7 +83,7 @@ public class FunctionType implements Type {
   }
   
   public int sizeof() {
-    return 0;
+    return 1;
   }
 
   public boolean isPointer() {

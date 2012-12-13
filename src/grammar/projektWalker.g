@@ -275,6 +275,8 @@ expression returns [PNode node]
   | i=String_constant {node = new StringConstantNode($i.text);}
   | i=Character_constant {node = new CharacterConstantNode($i.text);}
   | ^(CAST t=type_name a=expression) {node = new CastNode($a.node, $t.node);}
+  | ^(SIZEOF t=type_name) {node = new SizeofNode($t.node);}
+  | ^(SIZEOF a=expression) {node = new SizeofNode($a.node);}
 ;
 
 function_call returns [PNode node]

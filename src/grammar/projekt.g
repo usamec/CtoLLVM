@@ -33,6 +33,7 @@ tokens {
   DUMMYIDENTIFIER;
   TYPENAME;
   CAST;
+  SIZEOF;
 }
 
 @parser::header {
@@ -106,7 +107,7 @@ cast_expression options {backtrack=true;}
 	|	'(' type_name ')' cast_expression -> ^(CAST type_name cast_expression)
 	;	
 
-unary_expression
+unary_expression options {backtrack=true;}
 :	postfix_expression
 	|'++' unary_expression -> ^(PREFIXPLUSPLUS unary_expression)
 	|'--' unary_expression -> ^(PREFIXMINUSMINUS unary_expression)
@@ -116,9 +117,8 @@ unary_expression
         | '-' cast_expression -> ^(UNARYMINUS cast_expression)
         | '!' cast_expression -> ^(UNARYNOT cast_expression)
         | '~' cast_expression -> ^(UNARYNEG cast_expression)
-
-//	| 'sizeof' unary_expression
-//	| 'sizeof '(' type_name ')'
+  	| 'sizeof' unary_expression -> ^(SIZEOF unary_expression)
+  	| 'sizeof' '(' type_name ')' -> ^(SIZEOF type_name)
 	;
 	
 postfix_expression
