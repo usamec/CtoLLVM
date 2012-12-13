@@ -117,6 +117,9 @@ public class FunctionDefinitionNode implements PNode {
     
     boolean first = true;
     for (FunctionParameterNode n : parameters) {
+      if (n.isDummy()) {
+        throw new Exception("Unnamed parameters non allowed in function definition");
+      }
       if (!first) out.print(", ");
       first = false;
       out.print(n.getRepresentation());

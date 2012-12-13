@@ -30,6 +30,7 @@ tokens {
   STRUCTMEMBERPOINT;
   PREFIXPLUSPLUS;
   PREFIXMINUSMINUS;
+  DUMMYIDENTIFIER;
 }
 
 @parser::header {
@@ -51,6 +52,7 @@ tokens {
 
 parse  
 :  external_declaration* EOF! 
+//: abstract_declarator EOF!
 ;
 
 //original OR is left-recursive
@@ -184,9 +186,10 @@ parameter_list
   ;
 
 // TODO: fixnut na spravny tvar
-parameter_declaration
-	: declaration_specifiers declarator -> ^(PDEC declaration_specifiers ^(IDEC declarator))
-//	| declaration_specifiers abstract_declarator ?
+parameter_declaration options {backtrack=true;} 
+        : declaration_specifiers declarator -> ^(PDEC declaration_specifiers ^(IDEC declarator))
+	| declaration_specifiers abstract_declarator -> ^(PDEC declaration_specifiers ^(IDEC
+        abstract_declarator))
 	;
 
 function_definition
@@ -284,6 +287,7 @@ type_qualifier_list
 	: (Type_qualifier) (Type_qualifier)*
 	;
 
+// TODO vediet preparsovat setko
 direct_declarator
 	: (Identifier -> Identifier | '(' declarator ')' -> declarator)
           ('[' type_qualifier_list ? a=assignment_expression ? ']' -> 
@@ -411,14 +415,48 @@ struct_declarator
 //	: specifier_qualifier_list abstract_declarator ?
 //	;
 //
-//abstract_declarator
-//	: pointer
-//	| pointer ? direct_abstract_declarator
-//	;
-//
-//direct_abstract_declarator
-//	: ('(' abstract_declarator ')') (? '[' type_qualifier_list ? assignment_expression ? ']' | ? '[' 'static' type_qualifier_list ? assignment_expression ']' | ? '[' type_qualifier_list 'static' assignment_expression ']' | ? '[' '*' ']' | ? '(' parameter_type_list ? ')')*
-//	;
+abstract_declarator
+  : direct_abstract_declarator
+  | pointer abstract_declarator -> ^(POINTER abstract_declarator)
+;
+
+ne_abstract_declarator
+  : ne_direct_abstract_declarator
+  | pointer abstract_declarator -> ^(POINTER abstract_declarator)
+;
+// TODO: vediet preparsovat vsetko
+direct_abstract_declarator 
+	: ( -> DUMMYIDENTIFIER | '(' ne_abstract_declarator ')' -> ne_abstract_declarator) 
+          ( '[' type_qualifier_list? a=assignment_expression ? ']' ->
+            ^(ARRAYDEC $direct_abstract_declarator $a?) 
+          | '[' 'static' type_qualifier_list ? assignment_expression ']' 
+          | '[' type_qualifier_list 'static' assignment_expression ']' 
+          | '[' '*' ']' 
+          | '(' p=parameter_type_list? ')' -> ^(FUNCDEC $direct_abstract_declarator $p?) 
+          )*
+	;
+
+ne_direct_abstract_declarator 
+	: ( '(' ne_abstract_declarator ')' -> ne_abstract_declarator) 
+          ( '[' type_qualifier_list? a=assignment_expression ? ']' ->
+            ^(ARRAYDEC $ne_direct_abstract_declarator $a?) 
+          | '[' 'static' type_qualifier_list ? assignment_expression ']' 
+          | '[' type_qualifier_list 'static' assignment_expression ']' 
+          | '[' '*' ']' 
+          | '(' p=parameter_type_list? ')' -> ^(FUNCDEC $ne_direct_abstract_declarator $p?) 
+          )* 
+        | ( '[' type_qualifier_list? a=assignment_expression ? ']' ->
+            ^(ARRAYDEC $ne_direct_abstract_declarator $a?) 
+          | '[' 'static' type_qualifier_list ? assignment_expression ']' 
+          | '[' type_qualifier_list 'static' assignment_expression ']' 
+          | '[' '*' ']' 
+          | '(' p=parameter_type_list? ')' -> ^(FUNCDEC $ne_direct_abstract_declarator $p?) 
+          )+
+          
+	;
+
+
+
 //
 //typedef_name
 //	:Identifier
@@ -618,7 +656,7 @@ Float
 | '0'?'.' Digit* Exponent? Float_suffix?
 ;
 
-Punctuation
+fragment Punctuation
 : '!' | '"' |  '#' | '(' | ')' | '%' | '&' | '\'' | '*' | '+' | ',' | '-' | '.' | '/' | ':'| ';' | '<' | '=' | '>' | '?' | '[' | '\\' | ']' | '^' | '{' | '|' | '}' | '~'
 ;
 

@@ -8,6 +8,7 @@ public class DeclarationProcessor {
   DeclarationProcessor child = null;
   protected String name = "";
   protected List<FunctionParameterNode> functionParameters;
+  private boolean isDummy = false;
 
   public DeclarationProcessor() {
     functionParameters = new ArrayList<FunctionParameterNode>();
@@ -21,6 +22,17 @@ public class DeclarationProcessor {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public boolean isDummy() {
+    if (child != null)
+      return child.isDummy();
+    return isDummy;
+  }
+
+  public void setDummyName() {
+    isDummy = true;
+    name = IdCounter.GetDummyParameterName();
   }
 
   public void setChild(DeclarationProcessor child) {

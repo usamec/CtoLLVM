@@ -20,6 +20,10 @@ public class FunctionParameterNode {
     this.typedef = "";
   }
 
+  public boolean isDummy() {
+    return declaration.isDummy();
+  }
+
   public void setStruct(StructDeclarationNode structDeclaration) {
     this.structDeclaration = structDeclaration;
   }

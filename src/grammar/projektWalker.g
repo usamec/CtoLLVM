@@ -161,6 +161,7 @@ declaration returns [DeclarationNode node]
 declarator returns [DeclarationProcessor node]
   : ^(IDEC (
        id=Identifier {node = new DeclarationProcessor(); node.setName($id.text);} |
+       DUMMYIDENTIFIER {node = new DeclarationProcessor(); node.setDummyName();} |
        dn=dec_node {node = $dn.node;})
      )
 ;
@@ -179,6 +180,7 @@ pointer_declarator returns [DeclarationProcessor node]
 }
   : ^(POINTER (
        id=Identifier {pp.setName($id.text);} |
+       DUMMYIDENTIFIER {pp.setDummyName();} |
        dn=dec_node {pp.setChild($dn.node);}
       ))
 ;
@@ -191,6 +193,7 @@ function_declarator returns [DeclarationProcessor node]
 }
   : ^(FUNCDEC (
        id=Identifier {dp.setName($id.text);} |
+       DUMMYIDENTIFIER {dp.setDummyName();} |
        dn=dec_node {dp.setChild($dn.node);}
       )
       (p=parameter_declaration {dp.addParameter($p.node);})*
@@ -204,6 +207,7 @@ array_declarator returns [DeclarationProcessor node]
 }
   : ^(ARRAYDEC (
        id=Identifier {ap.setName($id.text);} |
+       DUMMYIDENTIFIER {ap.setDummyName();} |
        dn=dec_node {ap.setChild($dn.node);}
       )
       e=expression {ap.setExpression($e.node);}
