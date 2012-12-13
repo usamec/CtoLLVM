@@ -241,7 +241,7 @@ expression returns [PNode node]
       new IntegerConstantNode("1"), "-");}
   | ^(UNARYPLUS a=expression) {node = new UnaryPlusNode($a.node);}
   | ^(UNARYMINUS a=expression) {node = new UnaryMinusNode($a.node);}
-  | ^(UNARYNOT a=expression)
+  | ^(UNARYNOT a=expression) {node = new UnaryNotNode($a.node);}
   | ^(UNARYNEG a=expression)
   | ^(UNARYDEREFERENCE a=expression) {node = new DereferenceNode($a.node);}
   | ^(UNARYADDRESS a=expression) {node = new AddressNode($a.node);}

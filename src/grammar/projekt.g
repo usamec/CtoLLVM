@@ -106,9 +106,6 @@ unary_expression
 :	postfix_expression
 	|'++' unary_expression -> ^(PREFIXPLUSPLUS unary_expression)
 	|'--' unary_expression -> ^(PREFIXMINUSMINUS unary_expression)
-//	| ('!' | '~' | '*' | '&'  | '-' | '+') cast_expression
-//	| ('*' | '&'  | '-' | '+') cast_expression -> ^(UNARY ('*' | '&'  | '-' | '+')
-//        cast_expression)
         | '&' cast_expression -> ^(UNARYADDRESS cast_expression)
         | '*' cast_expression -> ^(UNARYDEREFERENCE cast_expression)
         | '+' cast_expression -> ^(UNARYPLUS cast_expression)
