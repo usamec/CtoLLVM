@@ -277,6 +277,7 @@ expression returns [PNode node]
   | ^(CAST t=type_name a=expression) {node = new CastNode($a.node, $t.node);}
   | ^(SIZEOF t=type_name) {node = new SizeofNode($t.node);}
   | ^(SIZEOF a=expression) {node = new SizeofNode($a.node);}
+  | ^(',' a=expression b=expression) {node = new CommaNode($a.node, $b.node);}
 ;
 
 function_call returns [PNode node]

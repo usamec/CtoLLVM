@@ -164,7 +164,7 @@ conditional_expression
 //	
 //
 expression
-  : 	assignment_expression //(',' assignment_expression)*
+  : 	assignment_expression (','^ assignment_expression)*
 ;
 //	
 //translation_unit:
