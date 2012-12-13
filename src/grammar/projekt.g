@@ -26,6 +26,8 @@ tokens {
   STRUCTUSE;
   STRUCTMEMBER;
   STRUCTMEMBERPOINT;
+  PREFIXPLUSPLUS;
+  PREFIXMINUSMINUS;
 }
 
 @parser::header {
@@ -100,8 +102,8 @@ cast_expression
 
 unary_expression
 :	postfix_expression
-//	|'++' unary_expression
-//	|'--' unary_expression
+	|'++' unary_expression -> ^(PREFIXPLUSPLUS unary_expression)
+	|'--' unary_expression -> ^(PREFIXMINUSMINUS unary_expression)
 //	| ('!' | '~' | '*' | '&'  | '-' | '+') cast_expression
 //	| ('*' | '&'  | '-' | '+') cast_expression -> ^(UNARY ('*' | '&'  | '-' | '+')
 //        cast_expression)
@@ -139,8 +141,8 @@ primary_expression
 	;
 	
 //
-assignment_expression	
-  : (unary_expression '=') => unary_expression ('=' | '*=' |  '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=')^ assignment_expression	
+assignment_expression options {backtrack=true;}
+  : unary_expression ('=' | '*=' |  '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=')^ assignment_expression	
   | conditional_expression
 	;
 //	

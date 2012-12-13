@@ -10,11 +10,9 @@ public class AssigmentNode implements PNode {
     this.lhs = lhs;
     this.rhs = rhs;
   }
-  @Override
-  public EvalResult produceOutput(PrintStream out) throws Exception {
-    int id = IdCounter.GetNewId();
-    EvalResult l = lhs.produceOutput(out);
-    EvalResult r = rhs.produceOutput(out);
+
+  public static EvalResult evaluateOperation(EvalResult l, EvalResult r, PrintStream out)
+      throws Exception {
     if (!l.isLVal()) {
       throw new Exception("priradenie do nie lval");
     }
@@ -32,5 +30,12 @@ public class AssigmentNode implements PNode {
 
     // TODO: isto chcem vratit toto?
     return r;
+  }
+
+  @Override
+  public EvalResult produceOutput(PrintStream out) throws Exception {
+    EvalResult l = lhs.produceOutput(out);
+    EvalResult r = rhs.produceOutput(out);
+    return evaluateOperation(l, r, out);
   }
 }
