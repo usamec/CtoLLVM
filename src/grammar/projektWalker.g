@@ -119,11 +119,20 @@ selection_statement returns [PNode node]
 ;
 
 iteration_statement returns [PNode node]
-  : ^('while' e=expression s=statement) {node = new WhileStatementNode(
+@init {
+  Scope scope = new Scope(currentScope);
+  currentScope = scope;
+}
+@after {
+  currentScope = currentScope.parent();
+}
+	: ^('while' e=expression s=statement) {node = new WhileStatementNode(
       $e.node, $s.node, currentScope);} |
 	^('do' s=statement e=expression) {node = new DoStatementNode(
-     $e.node, $s.node, currentScope);}  
-;
+     $e.node, $s.node, currentScope);} |
+	^('for' e1=expression ';' e2=expression ';' e3=expression s=statement) {node = new ForStatementNode(
+      $e1.node, $e2.node, $e3.node, $s.node, currentScope);} 
+	;
 
 jump_statement returns [PNode node]
   : ^('return' e=expression?) {node = new ReturnStatementNode($e.node, currentScope);}
