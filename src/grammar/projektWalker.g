@@ -218,9 +218,9 @@ expression returns [PNode node]
   | ^('%' a=expression b=expression) {node = new RemNode($a.node, $b.node);}
   | ^('=' a=expression b=expression) {node = new AssigmentNode($a.node, $b.node);}
   | ^('+=' a=expression b=expression) {node = new AssigmentOperationNode($a.node, $b.node, "+");}
-  | ^('*=' a=expression b=expression) {node = null;}
-  | ^('/=' a=expression b=expression) {node = null;}
-  | ^('%=' a=expression b=expression) {node = null;}
+  | ^('*=' a=expression b=expression) {node = new AssigmentOperationNode($a.node, $b.node, "*");}  
+  | ^('/=' a=expression b=expression) {node = new AssigmentOperationNode($a.node, $b.node, "/");}  
+  | ^('%=' a=expression b=expression) {node = new AssigmentOperationNode($a.node, $b.node, "\%");}  
   | ^('-=' a=expression b=expression) {node = null;}
   | ^('<<=' a=expression b=expression) {node = null;}
   | ^('>>=' a=expression b=expression) {node = null;}
