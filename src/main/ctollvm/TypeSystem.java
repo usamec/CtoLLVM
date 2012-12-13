@@ -277,7 +277,8 @@ public class TypeSystem {
               result.getRepresentation(), new_type.getRepresentation());
         }
       } else if (new_type.sizeof() == result.type.sizeof()) {
-        res.name = result.name;
+        res = result;
+        res.type = new_type;
       } else {
         out.printf("%s = trunc %s %s to %s\n",
             res.getRepresentation(), result.type.getRepresentation(),

@@ -240,7 +240,7 @@ expression returns [PNode node]
   | ^(PREFIXMINUSMINUS a=expression) {node = new AssigmentOperationNode($a.node,
       new IntegerConstantNode("1"), "-");}
   | ^(UNARYPLUS a=expression) {node = new UnaryPlusNode($a.node);}
-  | ^(UNARYMINUS a=expression)
+  | ^(UNARYMINUS a=expression) {node = new UnaryMinusNode($a.node);}
   | ^(UNARYNOT a=expression)
   | ^(UNARYNEG a=expression)
   | ^(UNARYDEREFERENCE a=expression) {node = new DereferenceNode($a.node);}
