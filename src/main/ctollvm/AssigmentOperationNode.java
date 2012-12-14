@@ -27,6 +27,17 @@ public class AssigmentOperationNode implements PNode {
       return AssigmentNode.evaluateOperation(l, DivNode.evaluateOperation(l, r, out), out);
     if (operation.equals("%"))
       return AssigmentNode.evaluateOperation(l, RemNode.evaluateOperation(l, r, out), out);
+    if (operation.equals("&"))
+        return AssigmentNode.evaluateOperation(l, AndNode.evaluateOperation(l, r, out), out);
+    if (operation.equals("^"))
+        return AssigmentNode.evaluateOperation(l, ExclusiveOrNode.evaluateOperation(l, r, out), out);
+    if (operation.equals("|"))
+        return AssigmentNode.evaluateOperation(l, InclusiveOrNode.evaluateOperation(l, r, out), out);
+    if (operation.equals("<<"))
+        return AssigmentNode.evaluateOperation(l, ShiftOperationNode.evaluateOperation(l, r, out, "<<"), out);
+    if (operation.equals(">>"))
+        return AssigmentNode.evaluateOperation(l, ShiftOperationNode.evaluateOperation(l, r, out, ">>"), out);
     return null;
   }
 }
+

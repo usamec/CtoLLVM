@@ -62,38 +62,36 @@ parse
 logical_or_expression
 : (logical_and_expression) ('||'^ logical_and_expression)*
 ;
-//
-//
+
+
 logical_and_expression
 : (inclusive_or_expression) ('&&'^ inclusive_or_expression)*
 ;
-//
+
 inclusive_or_expression
 : (exclusive_or_expression) ('|'^ exclusive_or_expression)*
 ;
-//
+
 exclusive_or_expression
 : (and_expression) ('^'^ and_expression)*
 ;
-//
+
 and_expression
 : (equality_expression) ('&'^ equality_expression)*
 ;
-//
+
 equality_expression
 : (relational_expression) (('!=' | '==')^ relational_expression)*
 ;
-//
-//
-//
+
 relational_expression
 : (shift_expression) (('<=' | '>=' | '<' | '>')^ shift_expression)*
 ;
-//
+
 shift_expression
-: (additive_expression)// (Shift_operator additive_expression)*
+: (additive_expression) (('>>'|'<<')^ additive_expression)*
 ;
-//
+
 additive_expression
 : (multiplicative_expression) (('+' | '-')^ multiplicative_expression)*
 ;
@@ -619,9 +617,6 @@ Keyword
 //: '&' | '|' | '^'
 //;
 
-Shift_operator
-: '<<' | '>>'
-;
 
 Boolean
 : 'true'
