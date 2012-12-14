@@ -259,6 +259,8 @@ expression returns [PNode node]
   | ^('>=' a=expression b=expression) {node = new CompareNode($a.node, $b.node, ">=");}
   | ^('==' a=expression b=expression) {node = null;}
   | ^('!=' a=expression b=expression) {node = null;}
+  | ^('|' a=expression b=expression) {node = new InclusiveOrNode($a.node, $b.node);}
+  | ^('^' a=expression b=expression) {node = new ExclusiveOrNode($a.node, $b.node);}
   | ^('&' a=expression b=expression) {node = new AndNode($a.node, $b.node);}
   | ^('&&' a=expression b=expression) {node = new LogicalAndNode($a.node, $b.node);}
   | ^('||' a=expression b=expression) {node = new LogicalOrNode($a.node, $b.node);}
