@@ -69,15 +69,15 @@ logical_and_expression
 ;
 //
 inclusive_or_expression
-: (exclusive_or_expression)// ('|' exclusive_or_expression)*
+: (exclusive_or_expression) ('|'^ exclusive_or_expression)*
 ;
 //
 exclusive_or_expression
-: (and_expression)// ('^' and_expression)*
+: (and_expression) ('^'^ and_expression)*
 ;
 //
 and_expression
-: (equality_expression)// ('&' equality_expression)*
+: (equality_expression) ('&'^ equality_expression)*
 ;
 //
 equality_expression
