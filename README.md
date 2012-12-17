@@ -14,12 +14,15 @@ LLVM sa pusta prikazmi: llvm-as -f test.ll && lli test.bc
 
 Co este nejde (a malo by):
 - postfixove ++, --
-- sizeof v runtime case (v compile time uz je spraveny)
 - switch
 - ternarny operator (X ? Y : Z)
 - enumy
-- polia, ktorych dlzka nie je cele cislo
 - suffixy pri konstantach
 - compile time vyhodnocovanie konstatnych vyrazov
 - kontrola hranic konstant
 - inicializacia pri deklaracii
+
+Isto nebude:
+- sizeof v runtime case (v compile time uz je spraveny)
+- polia, ktorych dlzka nie je cele cislo
+- polia (ani v argumentoch), ktore maju prazdnu deklaraciu (akoze char x[])
