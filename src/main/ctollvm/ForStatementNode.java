@@ -11,7 +11,7 @@ public class ForStatementNode implements PNode {
 
   public ForStatementNode(PNode clause,PNode expression2,PNode expression3, PNode statement, Scope scope) {
     this.clause = clause;
-  this.expression2 = expression2;
+    this.expression2 = expression2;
     this.expression3 = expression3;
     this.statement = statement;
     this.scope = scope;
@@ -23,16 +23,16 @@ public class ForStatementNode implements PNode {
     String labelcond = IdCounter.GetNewLabel();
     String labelstart = IdCounter.GetNewLabel();
     String labelafter = IdCounter.GetNewLabel();
-    String labelinit = IdCounter.GetNewLabel();
+    String labelthird = IdCounter.GetNewLabel();
     
-    out.printf("br label %%%s\n", labelinit);
-    out.printf("%s:\n", labelinit);
+//    out.printf("br label %%%s\n", labelinit);
+//    out.printf("%s:\n", labelinit);
     if (clause!=null){
     	EvalResult exp3 = clause.produceOutput(out);
     }
     out.printf("br label %%%s\n", labelcond);
-    
     out.printf("%s:\n", labelcond);
+
     if(expression2!=null){
     	EvalResult exp = expression2.produceOutput(out);
     
@@ -44,19 +44,21 @@ public class ForStatementNode implements PNode {
     		exp = exp2;
     	}
         
-    out.printf("br i1 %s, label %%%s, label %%%s\n", exp.getRepresentation(), 
+        out.printf("br i1 %s, label %%%s, label %%%s\n", exp.getRepresentation(), 
         labelstart, labelafter);
     } else {
     	out.printf("br label %%%s\n", labelstart);
     }
     out.printf("%s:\n", labelstart);  
     scope.pushBreakLabel(labelafter);
-    scope.pushContinueLabel(labelcond);
+    scope.pushContinueLabel(labelthird);
     statement.produceOutput(out);
-    
+   
+    out.printf("br label %%%s\n", labelthird);
+    out.printf("%s:\n", labelthird);
     if (expression3!=null){
     	EvalResult exp4 = expression3.produceOutput(out);    	       
-    }   
+    }  
     out.printf("br label %%%s\n", labelcond);
     out.printf("%s:\n", labelafter);
     scope.popBreakLabel();

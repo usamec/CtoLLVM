@@ -126,13 +126,26 @@ iteration_statement returns [PNode node]
 @after {
   currentScope = currentScope.parent();
 }
-	: ^('while' e=expression s=statement) {node = new WhileStatementNode(
-      $e.node, $s.node, currentScope);} |
-	^('do' s=statement e=expression) {node = new DoStatementNode(
-     $e.node, $s.node, currentScope);} |
-	^('for' e1=expression ';' e2=expression ';' e3=expression s=statement) {node = new ForStatementNode(
-      $e1.node, $e2.node, $e3.node, $s.node, currentScope);} 
-	;
+  : ^('while' e=expression s=statement) {node = new WhileStatementNode(
+      $e.node, $s.node, currentScope);} 
+  | ^('do' s=statement e=expression) {node = new DoStatementNode(
+      $e.node, $s.node, currentScope);} 
+  | ^('for' f1=for_1 f2=for_2 f3=for_3 s=statement) 
+        {node = new ForStatementNode($f1.node, $f2.node, $f3.node, $s.node, currentScope);} 
+;
+
+for_1 returns [PNode node]
+  : ^(FOR1 e=expression?) {node = $e.node;}
+  | ^(FOR1 d=declaration) {node = $d.node;}
+;
+
+for_2 returns [PNode node]
+  : ^(FOR2 e=expression?) {node = $e.node;}
+;
+
+for_3 returns [PNode node]
+  : ^(FOR3 e=expression?) {node = $e.node;}
+;
 
 jump_statement returns [PNode node]
   : ^('return' e=expression?) {node = new ReturnStatementNode($e.node, currentScope);}

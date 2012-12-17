@@ -34,6 +34,9 @@ tokens {
   TYPENAME;
   CAST;
   SIZEOF;
+  FOR1;
+  FOR2;
+  FOR3;
 }
 
 @parser::header {
@@ -207,9 +210,16 @@ statement
         | empty_statement
 ;
 
+for_1
+  : e1=expression? ';' -> ^(FOR1 $e1?)
+  | d=declaration -> ^(FOR1 $d)
+;
+
 for_iteration 
-	  :  'for'^ '('! expression? ';' expression? ';' expression? ')'! statement
-//	  |  'for'^ '('! declaration expression? ';'! expression? ')'! statement
+	  :  'for' '(' for_1  e2=expression? ';' e3=expression? ')' statement ->
+              ^('for' for_1 ^(FOR2 $e2?) ^(FOR3 $e3?) statement)
+//	  |  'for' '(' d=declaration e2=expression? ';' e3=expression? ')' statement ->
+//              ^('for' ^(FOR1 $d) ^(FOR2 $e2?) ^(FOR3 $e3?) statement)
 	  ;
 
 while_iteration
