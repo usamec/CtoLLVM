@@ -190,11 +190,34 @@ declaration returns [DeclarationNode node]
       'auto' {dn.setStorageSpecifier("auto");} |
       'register' {dn.setStorageSpecifier("register");} |
       t=Type_specifier {dn.addTypeSpecifier($t.text);} |
+      INT {dn.addTypeSpecifier("int");} |
       i=Identifier {dn.setTypedef($i.text);} | 
       s=struct_or_union_specifier {dn.setStruct($s.node);} |
-      s=struct_or_union_user {dn.setStruct($s.node);}
+      s=struct_or_union_user {dn.setStruct($s.node);} |
+      en=enum_declaration {dn.setEnum($en.node);}
       )*
       (d=declarator {dn.addDeclarationProcessor($d.node);} )*)
+;
+
+enum_declaration returns [EnumDeclarationNode node]
+@init {
+  EnumDeclarationNode ed = new EnumDeclarationNode(currentScope);
+  node = ed;
+}
+  : ^(ENUMDEC
+      (id=Identifier {ed.setName($id.text);})?
+      (e=enum_list {ed.setEnumList($e.node);}))
+;
+
+enum_list returns [List<EnumVal> node]
+@init {
+  node = new ArrayList<EnumVal>();
+}
+  : ^(ENUMLIST 
+      (id=Identifier {node.add(new EnumVal($id.text));}
+      |id=Identifier e=expression {node.add(new EnumVal($id.text, $e.node));} 
+      )+
+     )
 ;
 
 declarator returns [DeclarationProcessor node]

@@ -18,6 +18,9 @@ public class IdentifierNode implements PNode {
     if (v == null) {
       throw new Exception("neznama premenna");
     }
+    if (v.enumConst) {
+      return new IntegerConstantEvalResult(v.enumVal, TypeSystem.getInstance().getType("int"));   
+    }
     if (v.type.isArray()) {
       ArrayType at = (ArrayType) v.type;
       Type pt = TypeSystem.getInstance().getPointerType(at.getPointerTo());

@@ -9,12 +9,15 @@ public class Scope {
   class Variable {
     public Type type;
     public String name;
+    public boolean enumConst;
+    public int enumVal;
 
     // Pouzivane pre funkcie (ci je uz definovana predtym)
     public boolean defined = false;
     public Variable(Type type, String name) {
       this.type = type;
       this.name = name;
+      this.enumConst = false;
     }
   }
 

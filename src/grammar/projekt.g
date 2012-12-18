@@ -8,6 +8,7 @@ options {
 tokens {
   DEC;
   BLI;
+  INT;
   UNARYPLUS;
   UNARYMINUS;
   UNARYNOT;
@@ -38,6 +39,8 @@ tokens {
   FOR2;
   FOR3;
   TERNARY;
+  ENUMDEC;
+  ENUMLIST;
 }
 
 @parser::header {
@@ -325,6 +328,7 @@ declaration_specifiers_all
 comp_type_specifier
   : Identifier
   | struct_or_union_specifier
+  | enum_specifier
 ;
 
 type_specifier_after
@@ -386,22 +390,23 @@ struct_declarator_list
 ;
 //
 struct_declarator
-: declarator -> ^(IDEC declarator)
-// | declarator ? ':'! constant_expression!
+: declarator (':' constant_expression)? -> ^(IDEC declarator)
+| ':'! constant_expression!
 ;
 //
-//enum_specifier
-// : 'enum' Identifier ? '{' enumerator_list (',' enumerator_list)* '}'
-// | 'enum' Identifier
-// ;
-//
-//enumerator_list
-// : (enumerator_list ',') ? enumerator
-// ;
-//
-//enumerator
-// : Enumeration_constant ('=' constant_expression) ?
-// ;
+enum_specifier
+ : 'enum' Identifier ? '{' enumerator_list (',')? '}' -> 
+   ^(ENUMDEC Identifier? ^(ENUMLIST enumerator_list))
+ | 'enum' Identifier -> INT 
+ ;
+
+enumerator_list
+ : enumerator (','! enumerator)* 
+ ;
+
+enumerator
+ : Identifier ('='! constant_expression) ?
+ ;
 //
 //function_specifier
 // : 'inline'

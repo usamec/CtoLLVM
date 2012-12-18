@@ -12,6 +12,7 @@ public class DeclarationNode implements PNode {
   private String typedef;
   private boolean moreStorageSpecifiers;
   private StructDeclarationNode structDeclaration;
+  private EnumDeclarationNode enumDeclaration;
 
   public DeclarationNode(Scope scope) {
     this.declarators = new ArrayList<DeclarationProcessor>();
@@ -25,6 +26,10 @@ public class DeclarationNode implements PNode {
 
   public void setStruct(StructDeclarationNode structDeclaration) {
     this.structDeclaration = structDeclaration;
+  }
+
+  public void setEnum(EnumDeclarationNode enumDeclaration) {
+    this.enumDeclaration = enumDeclaration;
   }
 
   public void addDeclarationProcessor(DeclarationProcessor node) {
@@ -78,6 +83,8 @@ public class DeclarationNode implements PNode {
       t = tt.getTypeTo();
     } else if (structDeclaration != null) {
       t = structDeclaration.processDeclaration(out);
+    } else if (enumDeclaration != null) {
+      t = enumDeclaration.processDeclaration(out);
     }
     return t;  
   }
