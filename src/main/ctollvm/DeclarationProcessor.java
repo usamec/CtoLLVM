@@ -9,7 +9,8 @@ public class DeclarationProcessor {
   protected String name = "";
   protected List<FunctionParameterNode> functionParameters;
   private boolean isDummy = false;
-  protected PNode initializer;
+  protected PNode initializer = null;
+  protected String stringInitializer = null;
 
   public DeclarationProcessor() {
     functionParameters = new ArrayList<FunctionParameterNode>();
@@ -17,6 +18,10 @@ public class DeclarationProcessor {
 
   public void setInitializer(PNode node) {
     initializer = node;
+  }
+
+  public void setStringInitializer(String s) {
+    stringInitializer = s;
   }
 
   public List<FunctionParameterNode> getFunctionParameters() {
@@ -110,6 +115,24 @@ public class DeclarationProcessor {
         }
         out.println(String.format("%s = global %s %s", v.name, v.type.getRepresentation(),
             res.getRepresentation()));
+      } else if (stringInitializer != null) {
+        if (v.type.isArray()) {
+          System.out.println("array");
+          ArrayType at = (ArrayType) v.type;
+          if (! (at.getPointerTo().getRepresentation().equals("i8")))
+            throw new Exception("Wrong inicialization");
+          int l = at.count;
+          byte bytes[] = stringInitializer.getBytes();
+          StringBuffer buf = new StringBuffer();
+          for (int i = 0; i < bytes.length && i < l; i++)
+            buf.append(String.format("\\%02X", bytes[i]));
+          for (int i = bytes.length; i < l; i++)
+            buf.append("\\00");
+          out.printf("%s = global [%d x i8] c\"%s\"\n",
+              v.name, l, buf.toString());
+        } else {
+          throw new Exception("Wrong inicialization");
+        }
       } else {
         out.println(String.format("%s = global %s undef", v.name, v.type.getRepresentation()));
       }
@@ -119,6 +142,29 @@ public class DeclarationProcessor {
         EvalResult res = initializer.produceOutput(out);
         IdentifierNode idNode = new IdentifierNode(name, scope);
         AssigmentNode.evaluateOperation(idNode.produceOutput(out), res, out);
+      }
+      if (stringInitializer != null) {
+        if (v.type.isArray()) {
+          System.out.println("array");
+          ArrayType at = (ArrayType) v.type;
+          if (! (at.getPointerTo().getRepresentation().equals("i8")))
+            throw new Exception("Wrong inicialization");
+          int l = at.count;
+          byte bytes[] = stringInitializer.getBytes();
+          StringBuffer buf = new StringBuffer();
+          for (int i = 0; i < bytes.length && i < l; i++)
+            buf.append(String.format("\\%02X", bytes[i]));
+          for (int i = bytes.length; i < l; i++)
+            buf.append("\\00");
+          out.printf("store [%d x i8] c\"%s\", [%d x i8]* %s\n",
+              l, buf.toString(), l, v.name);
+        } else {
+          System.out.println("not array");
+          StringConstantNode sc = new StringConstantNode(stringInitializer);
+          IdentifierNode idNode = new IdentifierNode(name, scope);
+          AssigmentNode.evaluateOperation(idNode.produceOutput(out), sc.produceOutput(out),
+              out);
+        }
       }
     }
   }

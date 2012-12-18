@@ -226,11 +226,16 @@ declarator returns [DeclarationProcessor node]
        DUMMYIDENTIFIER {node = new DeclarationProcessor(); node.setDummyName();} |
        dn=dec_node {node = $dn.node;})
        (i=initializer {node.setInitializer($i.node);})?
+       (si=string_initializer {node.setStringInitializer($si.node);})?
      )
 ;
 
 initializer returns [PNode node]
   : ^(INITIALIZER e=expression) {node = $e.node;}
+;
+
+string_initializer returns [String node]
+  : ^(STRINGINITIALIZER s=String_constant) {node = $s.text;}
 ;
 
 dec_node returns [DeclarationProcessor node]
