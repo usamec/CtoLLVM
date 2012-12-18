@@ -14,7 +14,6 @@ LLVM sa pusta prikazmi: llvm-as -f test.ll && lli test.bc
 
 Co este nejde (a malo by):
 - postfixove ++, -- (andras)
-- enumy
 - suffixy pri konstantach (andras)
 - compile time vyhodnocovanie konstatnych vyrazov (andras posledne)
 - kontrola hranic konstant (andras)
