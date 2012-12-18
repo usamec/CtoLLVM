@@ -116,6 +116,10 @@ statement returns [PNode node]
 selection_statement returns [PNode node]
   : ^('if' e=expression s1=statement s2=statement?) {node = new IfStatementNode(
       $e.node, $s1.node, $s2.node);}
+  | ^('switch' e=expression s=statement) {node = new SwitchNode(
+      $e.node, $s.node, currentScope);}
+  | 'default' {node = new DefaultNode(currentScope);}
+  | ^('case' e=expression) {node = new CaseNode($e.node, currentScope);}
 ;
 
 iteration_statement returns [PNode node]

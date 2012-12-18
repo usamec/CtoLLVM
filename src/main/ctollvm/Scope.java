@@ -22,6 +22,7 @@ public class Scope {
   private Map<String, Variable> variables;
   private Stack<String> breakLabels;
   private Stack<String> continueLabels;
+  private Stack<SwitchNode> switchNodes;
 
   // Aby sme pri returne z funkcie vedeli typ funkcie
   private Type functionReturnType = null;
@@ -36,6 +37,7 @@ public class Scope {
     variables = new HashMap<String, Variable>();
     breakLabels = new Stack<String>();
     continueLabels = new Stack<String>();
+    switchNodes = new Stack<SwitchNode>();
   }
 
   public Scope parent() {
@@ -48,6 +50,23 @@ public class Scope {
 
   public void popBreakLabel() {
     breakLabels.pop();
+  }
+
+  public void pushSwitchNode(SwitchNode node) {
+    switchNodes.push(node);
+  }
+
+  public void popSwitchNode() {
+    switchNodes.pop();
+  }
+
+  public SwitchNode getSwitchNode() {
+    if (switchNodes.empty()) {
+      if (parent != null)
+        return parent.getSwitchNode();
+      return null;
+    }
+    return switchNodes.peek();
   }
 
   public String getBreakLabel() {

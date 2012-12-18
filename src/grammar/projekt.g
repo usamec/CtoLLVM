@@ -155,9 +155,9 @@ assignment_expression options {backtrack=true;}
   | conditional_expression
 ;
 //
-//constant_expression
-// : conditional_expression
-// ;
+constant_expression
+ : conditional_expression
+;
 //
 conditional_expression options {backtrack=true;}
   : logical_or_expression '?' expression ':' conditional_expression ->
@@ -198,8 +198,8 @@ function_definition
 ;
 
 statement
-// : labeled_statement
-: compound_statement
+: labeled_statement
+| compound_statement
 | expression_statement
 | selection_statement
 | iteration_statement
@@ -231,11 +231,11 @@ iteration_statement
 | do_iteration
 ;
 //
-//labeled_statement
-// : Identifier ':' statement
-// | 'case' constant_expression ':' statement
-// | 'default' : statement
-// ;
+labeled_statement
+ : Identifier ':' statement -> statement
+ | 'case' constant_expression ':' statement -> ^('case' constant_expression) statement
+ | 'default' ':'! statement
+ ;
 //
 compound_statement
 : '{' block_item_list '}' -> ^(COMPOUND block_item_list)
@@ -261,7 +261,7 @@ empty_statement
 //
 selection_statement
 : 'if'^ '('! expression ')'! statement ('else'! statement) ?
-// | 'switch' '(' expression ')' statement
+| 'switch'^ '('! expression ')'! statement
 ;
 //
 //
