@@ -37,6 +37,7 @@ tokens {
   FOR1;
   FOR2;
   FOR3;
+  TERNARY;
 }
 
 @parser::header {
@@ -158,20 +159,17 @@ assignment_expression options {backtrack=true;}
 // : conditional_expression
 // ;
 //
-conditional_expression
-  : logical_or_expression
-// : logical_or_expression ( | logical_or_expression '?' expression ':' conditional_expression )
+conditional_expression options {backtrack=true;}
+  : logical_or_expression '?' expression ':' conditional_expression ->
+    ^(TERNARY logical_or_expression expression conditional_expression)
+  | logical_or_expression
 ;
 //
 //
 expression
   : assignment_expression (','^ assignment_expression)*
 ;
-//
-//translation_unit:
-// (: external_declaration) (external_declaration)*
-// ;
-//
+
 external_declaration options {backtrack=true;}
 : function_definition
 | declaration
@@ -188,7 +186,6 @@ parameter_list
         parameter_declaration (parameter_declaration)*
   ;
 
-// TODO: fixnut na spravny tvar
 parameter_declaration options {backtrack=true;}
         : declaration_specifiers declarator -> ^(PDEC declaration_specifiers ^(IDEC declarator))
 | declaration_specifiers abstract_declarator -> ^(PDEC declaration_specifiers ^(IDEC
@@ -218,9 +215,7 @@ for_1
 for_iteration 
 	  :  'for' '(' for_1  e2=expression? ';' e3=expression? ')' statement ->
               ^('for' for_1 ^(FOR2 $e2?) ^(FOR3 $e3?) statement)
-//	  |  'for' '(' d=declaration e2=expression? ';' e3=expression? ')' statement ->
-//              ^('for' ^(FOR1 $d) ^(FOR2 $e2?) ^(FOR3 $e3?) statement)
-	  ;
+;
 
 while_iteration
 : 'while'^ '('! expression ')'! statement

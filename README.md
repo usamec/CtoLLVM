@@ -13,13 +13,13 @@ http://graphviz-dev.appspot.com/
 LLVM sa pusta prikazmi: llvm-as -f test.ll && lli test.bc
 
 Co este nejde (a malo by):
-- postfixove ++, --
+- postfixove ++, -- (andras)
 - switch
 - ternarny operator (X ? Y : Z)
 - enumy
-- suffixy pri konstantach
-- compile time vyhodnocovanie konstatnych vyrazov
-- kontrola hranic konstant
+- suffixy pri konstantach (andras)
+- compile time vyhodnocovanie konstatnych vyrazov (andras posledne)
+- kontrola hranic konstant (andras)
 - inicializacia pri deklaracii
 
 Isto nebude:
