@@ -81,7 +81,38 @@ public class DeclarationProcessor {
     }
     Scope.Variable v = scope.addVariable(name, type);
     if (scope.isGlobal()) {
-      out.println(String.format("%s = global %s undef", v.name, v.type.getRepresentation()));
+      if (initializer != null) {
+        EvalResult res = initializer.produceOutput(out);
+        if (!res.isConstant()) {
+          throw new Exception("Global variable must be initialized by constant");
+        }
+        if (v.type.isIntegral()) {
+          if (res.type.isDouble()) {
+            FloatingConstantEvalResult fr = (FloatingConstantEvalResult) res;
+            res = new IntegerConstantEvalResult(new Double(fr.value).intValue(), v.type);
+          } else {
+            IntegerConstantNode ic = new IntegerConstantNode(res.getRepresentation());
+            res = ic.produceOutput(out);
+            res.type = v.type;
+          }
+        }
+        if (v.type.isDouble()) {
+          if (res.type.isDouble()) {
+            res.type = v.type;
+          } else {
+            FloatingConstantNode ic = new FloatingConstantNode(res.getRepresentation());
+            res = ic.produceOutput(out);
+            res.type = v.type; 
+          }
+        }
+        if (v.type != res.type) {
+          throw new Exception("Wrong type in inicialization");
+        }
+        out.println(String.format("%s = global %s %s", v.name, v.type.getRepresentation(),
+            res.getRepresentation()));
+      } else {
+        out.println(String.format("%s = global %s undef", v.name, v.type.getRepresentation()));
+      }
     } else {
       out.println(String.format("%s = alloca %s", v.name, v.type.getRepresentation()));
       if (initializer != null) {
