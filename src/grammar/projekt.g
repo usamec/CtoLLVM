@@ -41,6 +41,9 @@ tokens {
   TERNARY;
   ENUMDEC;
   ENUMLIST;
+  ENUMID;
+  INITIALIZER;
+  STRINGINITIALIZER;
 }
 
 @parser::header {
@@ -347,7 +350,7 @@ declaration_specifiers
 // ;
 //
 init_declarator
-: declarator -> ^(IDEC declarator) //( '=' initializer ) ?
+: declarator ( '=' initializer ) ? -> ^(IDEC declarator initializer?) 
 ;
 //
 storage_class_specifier
@@ -405,7 +408,7 @@ enumerator_list
  ;
 
 enumerator
- : Identifier ('='! constant_expression) ?
+ : Identifier ('=' constant_expression) ? -> ENUMID Identifier constant_expression?
  ;
 //
 //function_specifier
@@ -473,10 +476,11 @@ ne_direct_abstract_declarator
 // :Identifier
 // ;
 //
-//initializer
-// : assignment_expression
+initializer
+ : String_constant -> ^(STRINGINITIALIZER String_constant)
+ | assignment_expression -> ^(INITIALIZER assignment_expression)
 // | '{' initializer_list (',' initializer_list)* '}'
-// ;
+ ;
 //
 //initializer_list
 // : (initializer_list ',') ? designation ? initializer

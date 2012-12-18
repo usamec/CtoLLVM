@@ -214,8 +214,8 @@ enum_list returns [List<EnumVal> node]
   node = new ArrayList<EnumVal>();
 }
   : ^(ENUMLIST 
-      (id=Identifier {node.add(new EnumVal($id.text));}
-      |id=Identifier e=expression {node.add(new EnumVal($id.text, $e.node));} 
+      (ENUMID id=Identifier {node.add(new EnumVal($id.text));}
+      |ENUMID id=Identifier e=expression {node.add(new EnumVal($id.text, $e.node));} 
       )+
      )
 ;
@@ -225,7 +225,12 @@ declarator returns [DeclarationProcessor node]
        id=Identifier {node = new DeclarationProcessor(); node.setName($id.text);} |
        DUMMYIDENTIFIER {node = new DeclarationProcessor(); node.setDummyName();} |
        dn=dec_node {node = $dn.node;})
+       (i=initializer {node.setInitializer($i.node);})?
      )
+;
+
+initializer returns [PNode node]
+  : ^(INITIALIZER e=expression) {node = $e.node;}
 ;
 
 dec_node returns [DeclarationProcessor node]

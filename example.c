@@ -6,7 +6,7 @@ int add(int a, int b) {
 
 int main() {
   int b[2][2];
-  b[0][0] = 1;
+  b[0][0] = 1l;
   b[1][0] = 42;
   int i;
   i = 0;

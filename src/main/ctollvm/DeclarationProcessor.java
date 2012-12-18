@@ -9,9 +9,14 @@ public class DeclarationProcessor {
   protected String name = "";
   protected List<FunctionParameterNode> functionParameters;
   private boolean isDummy = false;
+  protected PNode initializer;
 
   public DeclarationProcessor() {
     functionParameters = new ArrayList<FunctionParameterNode>();
+  }
+
+  public void setInitializer(PNode node) {
+    initializer = node;
   }
 
   public List<FunctionParameterNode> getFunctionParameters() {
@@ -79,6 +84,11 @@ public class DeclarationProcessor {
       out.println(String.format("%s = global %s undef", v.name, v.type.getRepresentation()));
     } else {
       out.println(String.format("%s = alloca %s", v.name, v.type.getRepresentation()));
+      if (initializer != null) {
+        EvalResult res = initializer.produceOutput(out);
+        IdentifierNode idNode = new IdentifierNode(name, scope);
+        AssigmentNode.evaluateOperation(idNode.produceOutput(out), res, out);
+      }
     }
   }
 }

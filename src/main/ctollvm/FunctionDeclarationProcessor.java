@@ -21,6 +21,9 @@ public class FunctionDeclarationProcessor extends DeclarationProcessor {
   }
 
   public Type processType(Type type) throws Exception {
+    if (initializer != null) {
+      throw new Exception("Function shouldn't have initializer");
+    }
     if (type.isArray()) {
       throw new Exception("Function cannot return an array");
     }
