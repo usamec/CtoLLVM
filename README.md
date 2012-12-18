@@ -17,7 +17,6 @@ Co este nejde (a malo by):
 - suffixy pri konstantach (andras)
 - compile time vyhodnocovanie konstatnych vyrazov (andras posledne)
 - kontrola hranic konstant (andras)
-- inicializacia pri deklaracii
 
 Isto nebude:
 - sizeof v runtime case (v compile time uz je spraveny)
