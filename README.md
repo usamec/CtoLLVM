@@ -13,12 +13,10 @@ http://graphviz-dev.appspot.com/
 LLVM sa pusta prikazmi: llvm-as -f test.ll && lli test.bc
 
 Co este nejde (a malo by):
-- postfixove ++, -- (andras)
-- suffixy pri konstantach (andras)
-- compile time vyhodnocovanie konstatnych vyrazov (andras posledne)
-- kontrola hranic konstant (andras)
+- postfixove ++, --
 
 Isto nebude:
+- compile time vyhodnocovanie konstatnych vyrazov
 - sizeof v runtime case (v compile time uz je spraveny)
 - polia, ktorych dlzka nie je cele cislo
 - polia (ani v argumentoch), ktore maju prazdnu deklaraciu (akoze char x[])
