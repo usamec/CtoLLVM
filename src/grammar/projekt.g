@@ -649,7 +649,8 @@ fragment Float_suffix
 
 
 fragment Integer_suffix
-: ('u'|'U'|'l'|'L')
+: ('u'|'U')? ('l'|'L')? ('l'|'L')?
+| ('l'|'L') ('l'|'L')? ('u'|'U')
 ;
 
 fragment Integer_body
@@ -660,7 +661,7 @@ fragment Integer_body
 ;
 
 Integer
-: Integer_body //Integer_suffix?
+: Integer_body Integer_suffix
 ;
 
 Float

@@ -2,9 +2,9 @@ package ctollvm;
 public class FloatingConstantEvalResult extends EvalResult {
   double value = 0;
 
-  public FloatingConstantEvalResult(double value) {
+  public FloatingConstantEvalResult(double value, Type type) {
     this.value = value;
-    this.type = TypeSystem.getInstance().getType("double");
+    this.type = type;
   }
 
   public String getRepresentation() {
