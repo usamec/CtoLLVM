@@ -11,7 +11,6 @@ public class CharacterConstantNode implements PNode {
   @Override
   public EvalResult produceOutput(PrintStream out) {
     byte bytes[] = value.getBytes();
-    // TODO: suffixy
     return new IntegerConstantEvalResult(
         bytes[0], TypeSystem.getInstance().getType("char"));
   }

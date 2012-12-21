@@ -30,10 +30,15 @@ public class DivNode implements PNode {
     EvalResult res = new EvalResult(l.type);
 
     if (l.type.isIntegral()) {
-      // TODO: unsigned div
-      out.println(String.format("%s = sdiv %s %s, %s", 
-          res.getRepresentation(), l.type.getRepresentation(),
-          l.getRepresentation(), r.getRepresentation()));
+      if (l.type.isSigned()) {
+        out.println(String.format("%s = sdiv %s %s, %s", 
+            res.getRepresentation(), l.type.getRepresentation(),
+            l.getRepresentation(), r.getRepresentation()));
+      } else {
+        out.println(String.format("%s = udiv %s %s, %s", 
+            res.getRepresentation(), l.type.getRepresentation(),
+            l.getRepresentation(), r.getRepresentation()));
+      }
     } else if (l.type.isDouble()) {
       out.println(String.format("%s = fdiv %s %s, %s", 
           res.getRepresentation(), l.type.getRepresentation(),

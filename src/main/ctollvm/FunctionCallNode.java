@@ -29,8 +29,6 @@ public class FunctionCallNode implements PNode {
     }
     FunctionType ft = (FunctionType) fn.type;
 
-    // TODO: argumenty typu ...
-
     if (ft.arguments.size() != arguments.size()) {
       if (!(ft.varArgs && ft.arguments.size() <= arguments.size()))
         throw new Exception(String.format("Bad number of arguments, act %d expect %d", 

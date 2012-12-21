@@ -28,7 +28,6 @@ public class AssigmentNode implements PNode {
         r.getRepresentation(),
         l.type.getRepresentation(), l.getIdentifierName()));
 
-    // TODO: isto chcem vratit toto?
     return r;
   }
 

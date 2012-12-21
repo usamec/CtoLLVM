@@ -16,20 +16,42 @@ public class ShiftOperationNode implements PNode {
 	}
 
 	static public EvalResult evaluateOperation(EvalResult l, EvalResult r,
-			PrintStream out, String direction) {
-		EvalResult res = new EvalResult(l.type);
-		if (direction.equals(">>")) {
-			out.println(String.format("%s = lshr %s %s, %s", res
-					.getRepresentation(), l.type.getRepresentation(), l
-					.getRepresentation(), r.getRepresentation()));
-		} else {
+			PrintStream out, String direction) throws Exception {
+          if (l.type != r.type) {
+            EvalResult l1 = TypeSystem.getInstance().unifyTypes(l, r, out);
+            if (l1 == null) {
+              EvalResult r1 = TypeSystem.getInstance().unifyTypes(r, l, out);
+              if (r1 == null) {
+                throw new Exception("shift nekompatibilnych typov");
+              } else {
+                r = r1;
+              }
+            } else {
+              l = l1;
+            }
+          }
+          if (!l.type.isIntegral())
+            throw new Exception("Shift on nonintegral type");
 
-			out.println(String.format("%s = shl %s %s, %s", res
-					.getRepresentation(), l.type.getRepresentation(), l
-					.getRepresentation(), r.getRepresentation()));
-		}
+          EvalResult res = new EvalResult(l.type);
+          if (direction.equals(">>")) {
+            if (l.type.isSigned()) {
+              out.println(String.format("%s = lshr %s %s, %s", res
+                    .getRepresentation(), l.type.getRepresentation(), l
+                    .getRepresentation(), r.getRepresentation()));
+            } else {
+              out.println(String.format("%s = ashr %s %s, %s", res
+                    .getRepresentation(), l.type.getRepresentation(), l
+                    .getRepresentation(), r.getRepresentation()));
+            }
+          } else {
 
-		return res;
+            out.println(String.format("%s = shl %s %s, %s", res
+                  .getRepresentation(), l.type.getRepresentation(), l
+                  .getRepresentation(), r.getRepresentation()));
+          }
+
+          return res;
 	}
 
 	@Override

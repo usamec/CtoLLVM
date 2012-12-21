@@ -31,9 +31,15 @@ public class RemNode implements PNode {
 
     if (l.type.isIntegral()) {
       // TODO: unsigned operation
-      out.println(String.format("%s = srem %s %s, %s", 
-          res.getRepresentation(), l.type.getRepresentation(),
-          l.getRepresentation(), r.getRepresentation()));
+      if (l.type.isSigned()) {
+        out.println(String.format("%s = srem %s %s, %s", 
+            res.getRepresentation(), l.type.getRepresentation(),
+            l.getRepresentation(), r.getRepresentation()));
+      } else {
+        out.println(String.format("%s = urem %s %s, %s", 
+            res.getRepresentation(), l.type.getRepresentation(),
+            l.getRepresentation(), r.getRepresentation()));
+      }
     } else {
       throw new Exception("Wrong types for remainder");
     }

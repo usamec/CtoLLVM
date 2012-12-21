@@ -13,7 +13,22 @@ public class AndNode implements PNode {
 	}
 
 	static public EvalResult evaluateOperation(EvalResult l, EvalResult r,
-			PrintStream out) {
+			PrintStream out) throws Exception {
+          if (l.type != r.type) {
+            EvalResult l1 = TypeSystem.getInstance().unifyTypes(l, r, out);
+            if (l1 == null) {
+              EvalResult r1 = TypeSystem.getInstance().unifyTypes(r, l, out);
+              if (r1 == null) {
+                throw new Exception("shift nekompatibilnych typov");
+              } else {
+                r = r1;
+              }
+            } else {
+              l = l1;
+            }
+          }
+          if (!l.type.isIntegral())
+            throw new Exception("And on nonintegral type");
 		EvalResult res = new EvalResult(l.type);
 
 		out.println(String.format("%s = and %s %s, %s",

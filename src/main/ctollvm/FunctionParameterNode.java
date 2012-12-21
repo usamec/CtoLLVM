@@ -74,7 +74,6 @@ public class FunctionParameterNode {
       ArrayType at = (ArrayType) t;
       t = TypeSystem.getInstance().getPointerType(at.getPointerTo());
     }
-    // TODO: ak je typ array, tak zmenit na pointer
     return t;
   }
 
