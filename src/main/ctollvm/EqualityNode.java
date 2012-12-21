@@ -27,6 +27,18 @@ public class EqualityNode implements PNode {
 
 		EvalResult l = lhs.produceOutput(out);
 		EvalResult r = rhs.produceOutput(out);
+                if (r.type.isPointer() && l.type.isIntegral()) {
+                  EvalResult tmp = l;
+                  l = r;
+                  r = tmp;
+                }
+
+                if (l.type.isPointer() && r.type.isIntegral()) {
+                  EvalResult l1 = TypeSystem.getInstance().convertTo(r.type, l, out);
+                  if (l1 == null)
+                    throw new Exception("Comparison of incompatible types");
+                  l = l1;
+                }
 
 		if (l.type != r.type) {
 			EvalResult l1 = TypeSystem.getInstance().unifyTypes(l, r, out);
