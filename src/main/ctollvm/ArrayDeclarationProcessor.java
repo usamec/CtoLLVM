@@ -35,7 +35,7 @@ public class ArrayDeclarationProcessor extends DeclarationProcessor {
       throw new Exception("Array size should be constant.");
     }
     IntegerConstantEvalResult ee = (IntegerConstantEvalResult) res;
-    Type t2 = TypeSystem.getInstance().getArrayType(type, ee.value);
+    Type t2 = TypeSystem.getInstance().getArrayType(type, (int)ee.value);
 
     return t2;
   }

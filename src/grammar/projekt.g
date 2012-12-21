@@ -44,6 +44,8 @@ tokens {
   ENUMID;
   INITIALIZER;
   STRINGINITIALIZER;
+  POSTFIXPLUS;
+  POSTFIXMINUS;
 }
 
 @parser::header {
@@ -137,7 +139,9 @@ postfix_expression
             '[' e=expression ']' ->
             ^(ARRAYSUBS $postfix_expression $e) |
             '.' i=Identifier -> ^(STRUCTMEMBER $postfix_expression $i) |
-            '->' i=Identifier -> ^(STRUCTMEMBERPOINT $postfix_expression $i)
+            '->' i=Identifier -> ^(STRUCTMEMBERPOINT $postfix_expression $i) |
+            '++' -> ^(POSTFIXPLUS $postfix_expression) |
+            '--' -> ^(POSTFIXMINUS $postfix_expression)
           )*
 ;
 //

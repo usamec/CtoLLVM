@@ -344,6 +344,8 @@ expression returns [PNode node]
   | ^(',' a=expression b=expression) {node = new CommaNode($a.node, $b.node);}
   | ^(TERNARY a=expression b=expression c=expression) {
       node = new TernaryNode($a.node, $b.node, $c.node);}
+  | ^(POSTFIXPLUS a=expression) {node = new PostfixPlusNode($a.node);}
+  | ^(POSTFIXMINUS a=expression) {node = new PostfixMinusNode($a.node);}
 ;
 
 function_call returns [PNode node]
